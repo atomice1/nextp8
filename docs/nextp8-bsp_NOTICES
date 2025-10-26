@@ -1,0 +1,32 @@
+Copyright (C) 2025 Chris January
+Copyright (c) 2006 CodeSourcery Inc
+Copyright (c) 1995, 1996, 2001 Cygnus Support
+
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose, provided
+that existing copyright notices are retained in all copies and that this
+notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.
+Modifications to this software may be copyrighted by their authors
+and need not follow the licensing terms described here, provided that
+the new terms are clearly indicated on the first page of each file where
+they apply.
+
+sdblockdevice.{ch} derived from mbed OS SDBlockDevice.{cpp,h}, Copyright (c)
+2006-2013 ARM Limited. Licensed under the Apache License, Version 2.0.
+
+spi.{ch} licensed under the Apache License, Version 2.0.
+
+Chan FatFs Copyright (C) 2022,2025, ChaN, all right reserved.
+
+FatFs module is an open source software. Redistribution and use of FatFs in
+source and binary forms, with or without modification, are permitted provided
+that the following condition is met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this condition and the following disclaimer.
+
+This software is provided by the copyright holder and contributors "AS IS"
+and any warranties related to this software are DISCLAIMED.
+The copyright owner or contributors be NOT LIABLE for any damages caused
+by use of this software.
