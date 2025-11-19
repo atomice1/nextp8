@@ -35,6 +35,40 @@ $1000000 +------------------------------------------+
          |                                          |
          | reserved                                 |
          |                                          |
+ $800200 +------------------------------------------+
+         | audio subsystem                          |
+         |                                          |
+ $800130 | STAT56 [r] [16]                          |
+ $80012e | STAT55 [r] [16]                          |
+ $80012c | STAT54 [r] [16]                          |
+ $80012a | STAT53 [r] [16]                          |
+ $800128 | STAT52 [r] [16]                          |
+ $800126 | STAT51 [r] [16]                          |
+ $800124 | STAT50 [r] [16]                          |
+ $800122 | STAT49 [r] [16]                          |
+ $800120 | STAT48 [r] [16]                          |
+ $80011e | STAT47 [r] [16]                          |
+ $80011c | STAT46 [r] [16]                          |
+ $80011a | MUSIC fade time (frames) [w] [16]        |
+ $800118 | MUSIC command register [w] [16]          |
+ $800116 | SFX length override [w] [16]             |
+ $800114 | SFX command register [w] [16]            |
+ $800112 | note release time (samples) [w] [16]     |
+ $800110 | note attack time (samples) [w] [16]      |
+ $80010f | HWFX 0x5f43 [w] [8]                      |
+ $80010e | HWFX 0x5f42 [w] [8]                      |
+ $80010d | HWFX 0x5f41 [w] [8]                      |
+ $80010c | HWFX 0x5f40 [w] [8]                      |
+ $80010a | MUSIC base lo [w] [16]                   |
+ $800108 | MUSIC base hi [w] [16]                   |
+ $800106 | SFX base lo [w] [16]                     |
+ $800104 | SFX base hi [w] [16]                     |
+ $800102 | control [w] [16]                         |
+         |  [0] run                                 |
+ $800100 | version [r] [16]                         |
+         |                                          |
+ $800100 +------------------------------------------+
+         | reserved                                 |
  $800080 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
@@ -63,14 +97,14 @@ $1000000 +------------------------------------------+
  $80001E | core ID [16]                             |
  $800012 | parameters [16]                          |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
- $00000E | vfront [r] / vfrontreq [w] [1]           |
- $00000C | POST code [w] [6]                        |
- $00000A | SDSPI chip select [w] [1]                |
- $000008 | SDSPI read ready [r] [1]                 |
- $000006 | SDSPI data out [r] [8]                   |
- $000004 | SDSPI data in [w] [8]                    |
- $000002 | SDSPI divider [w] [8]                    |
- $000000 | SDSPI write enable [w] [1]               |
+ $80000E | vfront [r] / vfrontreq [w] [1]           |
+ $80000C | POST code [w] [6]                        |
+ $80000A | SDSPI chip select [w] [1]                |
+ $800008 | SDSPI read ready [r] [1]                 |
+ $800006 | SDSPI data out [r] [8]                   |
+ $800004 | SDSPI data in [w] [8]                    |
+ $800002 | SDSPI divider [w] [8]                    |
+ $800000 | SDSPI write enable [w] [1]               |
          |                                          |
  $800000 +------------------------------------------+
          |                                          |
