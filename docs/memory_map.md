@@ -92,9 +92,12 @@ $1000000 +------------------------------------------+
          | PCM audio control [w] [16]               |
          |   [0] start [8] mono                     |
  $800034 | PCM audio address [r] [16]               |
- $800032 | 1MHz tick count lo                       |
- $800030 | 1Mhz tick count hi                       |
- $80001E | core ID [16]                             |
+ $800032 | 1MHz tick count lo [16]                  |
+ $800030 | 1Mhz tick count hi [16]                  |
+ $80001a | version lo [16]                          |
+ $800018 | version hi [16]                          |
+ $800016 | build timestamp lo [16]                  |
+ $800014 | build timestmap hi [16]                  |
  $800012 | parameters [16]                          |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
  $80000E | vfront [r] / vfrontreq [w] [1]           |
