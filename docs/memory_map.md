@@ -94,6 +94,11 @@ $1000000 +------------------------------------------+
  $800034 | PCM audio address [r] [16]               |
  $800032 | 1MHz tick count lo [16]                  |
  $800030 | 1Mhz tick count hi [16]                  |
+ $80002c | UART baud rate divider [16]              |
+ $800025 | UART read / write data [8]               |
+ $800024 | UART control [8]                         |
+         |   [r] [0] data ready [1] ready           |
+         |   [w] [0] write strobe [1] read strobe   |
  $80001a | version lo [16]                          |
  $800018 | version hi [16]                          |
  $800016 | build timestamp lo [16]                  |
