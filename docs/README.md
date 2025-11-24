@@ -12,7 +12,7 @@ nextp8 is still work in progress and is targeted at the unreleased KS3 Next hard
 
 You can, however, run the nextp8 firmware on a software model by following the instructions below:
 
-* Copy `sdspi.cpp`, `sdspi.h`, `sdspisim.cpp` and `sdspisim.h` from `nextp8-core/c_models`.
+* Copy the files from `nextp8-core/c_models`.
 * Build sQLux according to the instructions in the [upstream README](https://github.com/atomice1/sQLux-nextp8/blob/main/README_upstream.md).
 * Build the [m68k-elf-gcc toolchain](https://github.com/atomice1/m68k-elf-gcc).
 * Build [nextp8-bsp](https://github.com/atomice1/nextp8-bsp).
@@ -122,7 +122,7 @@ Soure Code: [https://github.com/atomice1/nextp8-core/](https://github.com/atomic
 
 ### femto8-nextp8
 
-Copyright (C) 2025 Chris January  
+Copyright (C) 2025 Chris January
 Copyright 2023 Ben Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
