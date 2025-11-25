@@ -109,20 +109,20 @@ The toolchain is based on GCC, binutils and newlib.
 
 The nextp8 software model is designed to facilitate pre-silicon firmware development. It is based on the sQLux Sinclair QL emulator.
 
-Licenses
+Licences
 --------
 
 ### nextp8-core
 
-Copyright (C) 2025 Chris January and other authors.
-Licensed under the [GNU General Public License 3.0 or later](gpl-3.0.txt)
-Soure Code: [https://github.com/atomice1/nextp8-core/](https://github.com/atomice1/nextp8-core/)
+Copyright (C) 2025 Chris January and other authors.<br>
+Source Code: [https://github.com/atomice1/nextp8-core/](https://github.com/atomice1/nextp8-core/)<br>
+Licensed under the [GNU General Public License 3.0 or later](licences/gpl-3.0.txt)
 
-[nextp8-core license notices](nextp8-core_NOTICES.md)
+[nextp8-core licence notices](licences/nextp8-core_NOTICES.txt)
 
 ### femto8-nextp8
 
-Copyright (C) 2025 Chris January
+Copyright (C) 2025 Chris January<br>
 Copyright 2023 Ben Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -142,11 +142,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[femto8-nextp8 license notices](femto8-nextp8_NOTICES.md)
+[femto8-nextp8 licence notices](licences/femto8-nextp8_NOTICES.txt)
 
 ### nextp8-bsp
 
-Copyright (C) 2025 Chris January  
+Copyright (C) 2025 Chris January<br>
 Portions copyright various authors
 
 The authors hereby grant permission to use, copy, modify, distribute,
@@ -159,9 +159,9 @@ and need not follow the licensing terms described here, provided that
 the new terms are clearly indicated on the first page of each file where
 they apply.
 
-Some components are licensed under the [Apache License 2.0](LICENSE-2.0.txt).
+Some components are licensed under the [Apache License 2.0](licences/apache-2.0.txt).
 
-[nextp8-bsp license notices](nextp8-bsp_NOTICES.md)
+[nextp8-bsp licence notices](licences/nextp8-bsp_NOTICES.txt)
 
 ### nextp8-loader
 
