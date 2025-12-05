@@ -72,33 +72,46 @@ $1000000 +------------------------------------------+
  $800080 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
-         | mouse buttons [r] [3]                    |
+ $80006b | mouse buttons [r] [3]                    |
          |  [0] left [1] right [2] middle           |
- $80006b |  [3] buton 4 [4] button 5                |
+         |  [3] buton 4 [4] button 5                |
  $80006a | mouse z [r] [8]                          |
  $800069 | mouse y [r] [8]                          |
  $800068 | mouse x [r] [8]                          |
-         | joystick 1 [r] [8]                       |
+ $800061 | joystick 1 [r] [8]                       |
          |  [0] up [1] down [2] left [3] right      |
- $800061 |  [4] button 1 [5] button 2               |
-         | joystick 0 [r] [8]                       |
+         |  [4] button 1 [5] button 2               |
+ $800060 | joystick 0 [r] [8]                       |
          |  [0] up [1] down [2] left [3] right      |
- $800060 |  [4] button 1 [5] button 2               |
-         | keyboard matrix [r] [256]                |
+         |  [4] button 1 [5] button 2               |
+ $800040 | keyboard matrix [r] [256]                |
          |   bit index = PS/2 scan code (set 2)     |
- $800040 |   extended scan codes | 0x80             |
-         | PCM audio period [w] [16]                |
- $800036 |   1 / 11 000 000 ticks                   |
-         | PCM audio control [w] [16]               |
+         |   extended scan codes | 0x80             |
+ $800038 | PCM audio period [w] [16]                |
+         |   1 / 11 000 000 ticks                   |
+ $800034 | PCM audio control [w] [16]               |
          |   [0] start [8] mono                     |
- $800034 | PCM audio address [r] [16]               |
- $800032 | 1MHz tick count lo [16]                  |
- $800030 | 1Mhz tick count hi [16]                  |
- $80002c | UART baud rate divider [16]              |
- $800025 | UART read / write data [8]               |
- $800024 | UART control [8]                         |
+         | PCM audio address [r] [16]               |
+ $800034 | 1MHz tick count lo [16]                  |
+ $800032 | 1Mhz tick count hi [16]                  |
+ $800030 | 1MHz tick count lo [16]                  |
+ $80002e | 1Mhz tick count hi [16]                  |
+ $80002a | ESP UART baud rate divider [r] [16]      |
+ $800029 | ESP UART read / write data [r/w] [8      |
+ $800028 | ESP UART status / control [8]            |
          |   [r] [0] data ready [1] ready           |
+         |       [2] read ack [3] write ack         |
          |   [w] [0] write strobe [1] read strobe   |
+ $800026 | Pi UART baud rate divider [w] [16]       |
+ $800025 | Pi UART read / write data [r/w] [8]      |
+ $800024 | Pi UART status / control [8]             |
+         |   [r] [0] data ready [1] ready           |
+         |       [2] read ack [3] write ack         |
+         |   [w] [0] write strobe [1] read strobe   |
+ $800023 | I2C status / control [8]                 |
+         |   [r] [0] busy [1] error                 |
+         |   [w] [0] enable [1] rw                  |
+ $800021 | I2C read / write data [8]                |
  $80001a | version lo [16]                          |
  $800018 | version hi [16]                          |
  $800016 | build timestamp lo [16]                  |
