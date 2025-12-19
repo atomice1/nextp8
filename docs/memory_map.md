@@ -20,17 +20,25 @@ $1000000 +------------------------------------------+
  $c08010 +------------------------------------------+
          | screen palette [16 * 8]                  |
  $c08000 +------------------------------------------+
-         | frame buffer 2 [126 * 128 * 4]           |
+         | current overlayfront buffer              |
+         |   [128 * 128 * 4]                        |
          |   4-bit colour index, packed             |
          |   left to right, top to bottom           |
  $c06000 +------------------------------------------+
-         | frame buffer 1 [126 * 128 * 4]           |
+         | current overlay back buffer              |
+         |   [128 * 128 * 4]                        |
          |   4-bit colour index, packed             |
          |   left to right, top to bottom           |
  $c04000 +------------------------------------------+
-         | alias for current front buffer           |
+         | current front buffer                     |
+         |   [128 * 128 * 4]                        |
+         |   4-bit colour index, packed             |
+         |   left to right, top to bottom           |
  $c02000 +------------------------------------------+
-         | alias for current back buffer            |
+         | current back buffer                      |
+         |   [128 * 128 * 4]                        |
+         |   4-bit colour index, packed             |
+         |   left to right, top to bottom           |
  $c00000 +------------------------------------------+
          |                                          |
          | reserved                                 |
@@ -118,6 +126,8 @@ $1000000 +------------------------------------------+
  $800014 | build timestmap hi [16]                  |
  $800012 | parameters [16]                          |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
+ $800010 | overlay control [w] 16                   |
+         |   [3:0] transparent index [6] enable     |
  $80000E | vfront [r] / vfrontreq [w] [1]           |
  $80000C | POST code [w] [6]                        |
  $80000A | SDSPI chip select [w] [1]                |
