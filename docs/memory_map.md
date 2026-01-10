@@ -17,10 +17,12 @@ $1000000 +------------------------------------------+
          | alias for current frame buffer           |
  $c0c000 +------------------------------------------+
          | reserved                                 |
+ $c08020 +------------------------------------------+
+         | screen palette front [16 * 8]            |
  $c08010 +------------------------------------------+
-         | screen palette [16 * 8]                  |
+         | screen palette back [16 * 8]             |
  $c08000 +------------------------------------------+
-         | current overlayfront buffer              |
+         | current overlay front buffer             |
          |   [128 * 128 * 4]                        |
          |   4-bit colour index, packed             |
          |   left to right, top to bottom           |
@@ -77,15 +79,26 @@ $1000000 +------------------------------------------+
          |                                          |
  $800100 +------------------------------------------+
          | reserved                                 |
- $800080 +------------------------------------------+
+ $8000a0 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
- $80006b | mouse buttons [r] [3]                    |
+ $800080 | latched keyboard matrix [rw] [256]       |
+         |   bit index = PS/2 scan code (set 2)     |
+         |   extended scan codes | 0x80             |
+ $80006b | mouse buttons [r] [8]                    |
          |  [0] left [1] right [2] middle           |
          |  [3] buton 4 [4] button 5                |
  $80006a | mouse z [r] [8]                          |
  $800069 | mouse y [r] [8]                          |
  $800068 | mouse x [r] [8]                          |
+ $800067 | latched joystick 1 [rw] [8]              |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $800066 | latched joystick 0 [rw] [8]              |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $800064 | debug reg lo [w] [16]                    |
+ $800062 | debug reg hi [w] [16]                    |
  $800061 | joystick 1 [r] [8]                       |
          |  [0] up [1] down [2] left [3] right      |
          |  [4] button 1 [5] button 2               |
@@ -126,16 +139,19 @@ $1000000 +------------------------------------------+
  $800014 | build timestmap hi [16]                  |
  $800012 | parameters [16]                          |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
- $800010 | overlay control [w] 16                   |
+ $800010 | overlay control [w] 8                    |
          |   [3:0] transparent index [6] enable     |
  $80000E | vfront [r] / vfrontreq [w] [1]           |
+ $80000D | reset type                               |
+         |   [r] [2] 00=power-on, 01=button, 10=sw  |
+         |   [w] sw-initiated reset                 |
  $80000C | POST code [w] [6]                        |
- $80000A | SDSPI chip select [w] [1]                |
- $800008 | SDSPI read ready [r] [1]                 |
- $800006 | SDSPI data out [r] [8]                   |
- $800004 | SDSPI data in [w] [8]                    |
- $800002 | SDSPI divider [w] [8]                    |
- $800000 | SDSPI write enable [w] [1]               |
+ $80000B | SDSPI chip select [w] [2]                |
+ $800009 | SDSPI read ready [r] [1]                 |
+ $800007 | SDSPI data out [r] [8]                   |
+ $800005 | SDSPI data in [w] [8]                    |
+ $800003 | SDSPI divider [w] [8]                    |
+ $800001 | SDSPI write enable [w] [1]               |
          |                                          |
  $800000 +------------------------------------------+
          |                                          |
