@@ -85,12 +85,17 @@ $1000000 +------------------------------------------+
  $800080 | latched keyboard matrix [rw] [256]       |
          |   bit index = PS/2 scan code (set 2)     |
          |   extended scan codes | 0x80             |
- $80006b | mouse buttons [r] [8]                    |
+ $80006f | latched mouse buttons [rw] [8]           |
+         |   write to clear latched bits            |
+ $80006e | mouse buttons [r] [8]                    |
          |  [0] left [1] right [2] middle           |
-         |  [3] buton 4 [4] button 5                |
- $80006a | mouse z [r] [8]                          |
- $800069 | mouse y [r] [8]                          |
- $800068 | mouse x [r] [8]                          |
+         |  [3] button 4 [4] button 5               |
+ $80006c | mouse z [r] [signed 16]                  |
+         |   scroll wheel position accumulator      |
+ $80006a | mouse y [r] [signed 16]                  |
+         |   vertical position accumulator          |
+ $800068 | mouse x [r] [signed 16]                  |
+         |   horizontal position accumulator        |
  $800067 | latched joystick 1 [rw] [8]              |
          |  [0] up [1] down [2] left [3] right      |
          |  [4] button 1 [5] button 2               |
@@ -113,12 +118,12 @@ $1000000 +------------------------------------------+
  $800034 | PCM audio control [w] [16]               |
          |   [0] start [8] mono                     |
          | PCM audio address [r] [16]               |
- $800034 | 1MHz tick count lo [16]                  |
- $800032 | 1Mhz tick count hi [16]                  |
- $800030 | 1MHz tick count lo [16]                  |
- $80002e | 1Mhz tick count hi [16]                  |
+ $800034 | 1MHz tick count [63:48] [16]             |
+ $800032 | 1Mhz tick count [47:32] [16]             |
+ $800030 | 1MHz tick count [31:16] [16]             |
+ $80002e | 1Mhz tick count [15:0] [16]              |
  $80002a | ESP UART baud rate divider [r] [16]      |
- $800029 | ESP UART read / write data [r/w] [8      |
+ $800029 | ESP UART read / write data [r/w] [8]     |
  $800028 | ESP UART status / control [8]            |
          |   [r] [0] data ready [1] ready           |
          |       [2] read ack [3] write ack         |
@@ -141,6 +146,9 @@ $1000000 +------------------------------------------+
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
  $800010 | overlay control [w] 8                    |
          |   [3:0] transparent index [6] enable     |
+ $80000F | vblank interrupt control [w] [8]         |
+         |   [0] 0=disable and clear IRQ            |
+         |       1=enable and clear IRQ             |
  $80000E | vfront [r] / vfrontreq [w] [1]           |
  $80000D | reset type                               |
          |   [r] [2] 00=power-on, 01=button, 10=sw  |
