@@ -14,7 +14,6 @@ $1000000 +------------------------------------------+
          | PCM audio memory [8192 * 16]             |
          |   mono mode samples: 16-bit signed       |
          |   stereo mode samples: [15:8] R [7:0] L  |
-         | alias for current frame buffer           |
  $c0c000 +------------------------------------------+
          | reserved                                 |
  $c08020 +------------------------------------------+
@@ -74,7 +73,7 @@ $1000000 +------------------------------------------+
  $800106 | SFX base lo [w] [16]                     |
  $800104 | SFX base hi [w] [16]                     |
  $800102 | control [w] [16]                         |
-         |  [0] run                                 |
+         |   [0] run                                |
  $800100 | version [r] [16]                         |
          |                                          |
  $800100 +------------------------------------------+
@@ -88,8 +87,8 @@ $1000000 +------------------------------------------+
  $80006f | latched mouse buttons [rw] [8]           |
          |   write to clear latched bits            |
  $80006e | mouse buttons [r] [8]                    |
-         |  [0] left [1] right [2] middle           |
-         |  [3] button 4 [4] button 5               |
+         |   [0] left [1] right [2] middle          |
+         |   [3] button 4 [4] button 5              |
  $80006c | mouse z [r] [signed 16]                  |
          |   scroll wheel position accumulator      |
  $80006a | mouse y [r] [signed 16]                  |
@@ -115,7 +114,7 @@ $1000000 +------------------------------------------+
          |   extended scan codes | 0x80             |
  $800038 | PCM audio period [w] [16]                |
          |   1 / 11 000 000 ticks                   |
- $800034 | PCM audio control [w] [16]               |
+ $800036 | PCM audio control [w] [16]               |
          |   [0] start [8] mono                     |
          | PCM audio address [r] [16]               |
  $800034 | 1MHz tick count [63:48] [16]             |
@@ -123,13 +122,13 @@ $1000000 +------------------------------------------+
  $800030 | 1MHz tick count [31:16] [16]             |
  $80002e | 1Mhz tick count [15:0] [16]              |
  $80002a | ESP UART baud rate divider [r] [16]      |
- $800029 | ESP UART read / write data [r/w] [8]     |
+ $800029 | ESP UART read / write data [rw] [8]      |
  $800028 | ESP UART status / control [8]            |
          |   [r] [0] data ready [1] ready           |
          |       [2] read ack [3] write ack         |
          |   [w] [0] write strobe [1] read strobe   |
  $800026 | Pi UART baud rate divider [w] [16]       |
- $800025 | Pi UART read / write data [r/w] [8]      |
+ $800025 | Pi UART read / write data [rw] [8]       |
  $800024 | Pi UART status / control [8]             |
          |   [r] [0] data ready [1] ready           |
          |       [2] read ack [3] write ack         |
