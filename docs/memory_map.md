@@ -3,10 +3,6 @@ nextp8 Memory Map
 
 ```
 $1000000 +------------------------------------------+
-         | stderr tube                              |
- $ffffff +------------------------------------------+
-         | stdout tube                              |
- $fffffe +------------------------------------------+
          |                                          |
          | reserved                                 |
          |                                          |
@@ -47,27 +43,27 @@ $1000000 +------------------------------------------+
  $800200 +------------------------------------------+
          | audio subsystem                          |
          |                                          |
- $800130 | STAT56 [r] [16]                          |
- $80012e | STAT55 [r] [16]                          |
- $80012c | STAT54 [r] [16]                          |
- $80012a | STAT53 [r] [16]                          |
- $800128 | STAT52 [r] [16]                          |
- $800126 | STAT51 [r] [16]                          |
- $800124 | STAT50 [r] [16]                          |
- $800122 | STAT49 [r] [16]                          |
- $800120 | STAT48 [r] [16]                          |
- $80011e | STAT47 [r] [16]                          |
- $80011c | STAT46 [r] [16]                          |
- $80011a | MUSIC fade time (frames) [w] [16]        |
- $800118 | MUSIC command register [w] [16]          |
- $800116 | SFX length override [w] [16]             |
- $800114 | SFX command register [w] [16]            |
- $800112 | note release time (samples) [w] [16]     |
- $800110 | note attack time (samples) [w] [16]      |
- $80010f | HWFX 0x5f43 [w] [8]                      |
- $80010e | HWFX 0x5f42 [w] [8]                      |
- $80010d | HWFX 0x5f41 [w] [8]                      |
- $80010c | HWFX 0x5f40 [w] [8]                      |
+ $800134 | STAT56 [r] [16]                          |
+ $800132 | STAT55 [r] [16]                          |
+ $800130 | STAT54 [r] [16]                          |
+ $80012e | STAT53 [r] [16]                          |
+ $80012c | STAT52 [r] [16]                          |
+ $80012a | STAT51 [r] [16]                          |
+ $800128 | STAT50 [r] [16]                          |
+ $800126 | STAT49 [r] [16]                          |
+ $800124 | STAT48 [r] [16]                          |
+ $800122 | STAT47 [r] [16]                          |
+ $800120 | STAT46 [r] [16]                          |
+ $80011e | MUSIC fade time (frames) [w] [16]        |
+ $80011c | MUSIC command register [w] [16]          |
+ $80011a | SFX length override [w] [16]             |
+ $800118 | SFX command register [w] [16]            |
+ $800116 | note release time (samples) [w] [16]     |
+ $800114 | note attack time (samples) [w] [16]      |
+ $800113 | HWFX 0x5f43 [w] [8]                      |
+ $800111 | HWFX 0x5f42 [w] [8]                      |
+ $80010f | HWFX 0x5f41 [w] [8]                      |
+ $80010d | HWFX 0x5f40 [w] [8]                      |
  $80010a | MUSIC base lo [w] [16]                   |
  $800108 | MUSIC base hi [w] [16]                   |
  $800106 | SFX base lo [w] [16]                     |
@@ -84,81 +80,81 @@ $1000000 +------------------------------------------+
  $800080 | latched keyboard matrix [rw] [256]       |
          |   bit index = PS/2 scan code (set 2)     |
          |   extended scan codes | 0x80             |
- $80006f | latched mouse buttons [rw] [8]           |
-         |   write to clear latched bits            |
- $80006e | mouse buttons [r] [8]                    |
-         |   [0] left [1] right [2] middle          |
-         |   [3] button 4 [4] button 5              |
- $80006c | mouse z [r] [signed 16]                  |
-         |   scroll wheel position accumulator      |
- $80006a | mouse y [r] [signed 16]                  |
-         |   vertical position accumulator          |
- $800068 | mouse x [r] [signed 16]                  |
-         |   horizontal position accumulator        |
- $800067 | latched joystick 1 [rw] [8]              |
-         |  [0] up [1] down [2] left [3] right      |
-         |  [4] button 1 [5] button 2               |
- $800066 | latched joystick 0 [rw] [8]              |
-         |  [0] up [1] down [2] left [3] right      |
-         |  [4] button 1 [5] button 2               |
- $800064 | debug reg lo [w] [16]                    |
- $800062 | debug reg hi [w] [16]                    |
- $800061 | joystick 1 [r] [8]                       |
-         |  [0] up [1] down [2] left [3] right      |
-         |  [4] button 1 [5] button 2               |
- $800060 | joystick 0 [r] [8]                       |
-         |  [0] up [1] down [2] left [3] right      |
-         |  [4] button 1 [5] button 2               |
- $800040 | keyboard matrix [r] [256]                |
+ $800060 | keyboard matrix [r] [256]                |
          |   bit index = PS/2 scan code (set 2)     |
          |   extended scan codes | 0x80             |
- $800038 | PCM audio period [w] [16]                |
+ $800059 | latched mouse buttons [rw] [8]           |
+         |   write to clear latched bits            |
+ $800057 | mouse buttons [r] [8]                    |
+         |   [0] left [1] right [2] middle          |
+         |   [3] button 4 [4] button 5              |
+ $800054 | mouse z [r] [signed 16]                  |
+         |   scroll wheel position accumulator      |
+ $800052 | mouse y [r] [signed 16]                  |
+         |   vertical position accumulator          |
+ $800050 | mouse x [r] [signed 16]                  |
+         |   horizontal position accumulator        |
+ $80004f | latched joystick 1 [rw] [8]              |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $80004d | latched joystick 0 [rw] [8]              |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $80004b | joystick 1 [r] [8]                       |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $800049 | joystick 0 [r] [8]                       |
+         |  [0] up [1] down [2] left [3] right      |
+         |  [4] button 1 [5] button 2               |
+ $800042 | PCM audio period [w] [16]                |
          |   1 / 11 000 000 ticks                   |
- $800036 | PCM audio control [w] [16]               |
+ $800040 | PCM audio control [w] [16]               |
          |   [0] start [8] mono                     |
          | PCM audio address [r] [16]               |
- $800034 | 1MHz tick count [63:48] [16]             |
- $800032 | 1Mhz tick count [47:32] [16]             |
- $800030 | 1MHz tick count [31:16] [16]             |
- $80002e | 1Mhz tick count [15:0] [16]              |
- $80002a | ESP UART baud rate divider [r] [16]      |
- $800029 | ESP UART read / write data [rw] [8]      |
- $800028 | ESP UART status / control [8]            |
-         |   [r] [0] data ready [1] ready           |
-         |       [2] read ack [3] write ack         |
-         |   [w] [0] write strobe [1] read strobe   |
- $800026 | Pi UART baud rate divider [w] [16]       |
- $800025 | Pi UART read / write data [rw] [8]       |
- $800024 | Pi UART status / control [8]             |
-         |   [r] [0] data ready [1] ready           |
-         |       [2] read ack [3] write ack         |
-         |   [w] [0] write strobe [1] read strobe   |
- $800023 | I2C status / control [8]                 |
+ $80003f | I2C status / control [8]                 |
          |   [r] [0] busy [1] error                 |
          |   [w] [0] enable [1] rw                  |
- $800021 | I2C read / write data [8]                |
- $80001a | version lo [16]                          |
- $800018 | version hi [16]                          |
- $800016 | build timestamp lo [16]                  |
- $800014 | build timestmap hi [16]                  |
- $800012 | parameters [16]                          |
-         |   [0] 0=keyboard at PS/2 port; 1=mouse   |
- $800010 | overlay control [w] 8                    |
+ $80003d | I2C read / write data [8]                |
+ $80003a | ESP UART baud rate divider [r] [16]      |
+ $800039 | ESP UART read / write data [rw] [8]      |
+ $800037 | ESP UART status / control [8]            |
+         |   [r] [0] data ready [1] ready           |
+         |       [2] read ack [3] write ack         |
+         |   [w] [0] write strobe [1] read strobe   |
+ $800034 | Pi UART baud rate divider [w] [16]       |
+ $800033 | Pi UART read / write data [rw] [8]       |
+ $800031 | Pi UART status / control [8]             |
+         |   [r] [0] data ready [1] ready           |
+         |       [2] read ack [3] write ack         |
+         |   [w] [0] write strobe [1] read strobe   |
+ $80002B | SDSPI chip select [w] [2]                |
+ $800029 | SDSPI read ready [r] [1]                 |
+ $800027 | SDSPI data out [r] [8]                   |
+ $800025 | SDSPI data in [w] [8]                    |
+ $800023 | SDSPI divider [w] [8]                    |
+ $800021 | SDSPI write enable [w] [1]               |
+ $80001f | overlay control [w] [8]                  |
          |   [3:0] transparent index [6] enable     |
- $80000F | vblank interrupt control [w] [8]         |
+ $80001d | vfront [r] / vfrontreq [w] [1]           |
+ $80001a | 1MHz tick count [63:48] [16]             |
+ $800018 | 1Mhz tick count [47:32] [16]             |
+ $800016 | 1MHz tick count [31:16] [16]             |
+ $800014 | 1Mhz tick count [15:0] [16]              |
+ $800013 | vblank interrupt control [w] [8]         |
          |   [0] 0=disable and clear IRQ            |
          |       1=enable and clear IRQ             |
- $80000E | vfront [r] / vfrontreq [w] [1]           |
- $80000D | reset type                               |
+ $800011 | reset type                               |
          |   [r] [2] 00=power-on, 01=button, 10=sw  |
-         |   [w] sw-initiated reset                 |
- $80000C | POST code [w] [6]                        |
- $80000B | SDSPI chip select [w] [2]                |
- $800009 | SDSPI read ready [r] [1]                 |
- $800007 | SDSPI data out [r] [8]                   |
- $800005 | SDSPI data in [w] [8]                    |
- $800003 | SDSPI divider [w] [8]                    |
- $800001 | SDSPI write enable [w] [1]               |
+         |   [w] 01=sw-initiated reset              |
+ $80000f | POST code [w] [6]                        |
+ $80000c | debug reg lo [w] [16]                    |
+ $80000a | debug reg hi [w] [16]                    |
+ $800008 | version lo [16]                          |
+ $800006 | version hi [16]                          |
+ $800004 | build timestamp lo [16]                  |
+ $800002 | build timestmap hi [16]                  |
+ $800000 | parameters [16]                          |
+         |   [0] 0=keyboard at PS/2 port; 1=mouse   |
          |                                          |
  $800000 +------------------------------------------+
          |                                          |
