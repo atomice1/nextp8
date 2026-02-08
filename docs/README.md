@@ -5,6 +5,18 @@ nextp8 is a hobby project to make a Pico-8 compatible 'core' for the ZX Spectrum
 
 The Pico-8 is a fantasy 8-bit games console. The fantasy bit means that Pico-8 is a purely software implementation; there is no real Pico-8 hardware. Programs are written in Lua, a language not too aesthetically dissimilar from the Basic that ruled the 8-bit home computer heyday. Go buy a copy of Pico-8.
 
+<table>
+  <tr>
+    <td><img src="screenshot_20260208_193506.png" alt="Spartak-1 game" width="400"/></td>
+    <td><img src="screenshot_20260208_193535.png" alt="Welcome cart" width="400"/></td>
+  </tr>
+  <tr>
+    <td><img src="screenshot_20260208_193453.png" alt="Selecting a Wi-Fi access point" width="400"/></td>
+    <td><img src="screenshot_20260208_193502.png" alt="Dowloading a cart from the BBS" width="400"/></td>
+  </tr>
+</table>
+
+
 Getting Started
 ---------------
 
@@ -57,13 +69,11 @@ The display processor supports native double buffering and the system contains V
 
 ### Audio Processor
 
-Note: the audio processor is still work in progress!
-
 The audio processor implements the Pico-8 SFX and MUSIC. The note timing exactly matches the Pico-8, however the instrument waveforms, effects and filters are approximations. Custom instruments, including PCM instruments are supported.
 
 The audio processor directly reads SFX data and MUSIC patterns from memory using DMA. It has priority over the CPU.
 
-The SFX core is designed to be chainable. This is used to implement custom instruments where the custom instrument SFX core PCM output is input to the main SFX core.
+The SFX core also supports custom instruments where the custom instrument SFX core PCM output is input to the main SFX core.
 
 ### Peripherals
 
