@@ -118,7 +118,7 @@ Hardware
 
 ### Introduction
 
-The FPGA image implements the Pico-8 hardware... But that's not entirely true because the Pico-8 is a fantasy console so there is no real hardware! In fact Pico-8's fantasy hardware can't always be directly translated to real hardware. For example, the Pico-8's display is double buffered (that's why there is a FLIP function), but the memory map only exposes a single frame buffer. No problem! Just flip the frame buffer memory mapping in hardware. But that doesn't work because the Pico-8's frame buffer retains its contents after FLIP...  For this reason the FPGA image doesn't implement the Pico-8 fantasy hardware exactly because it doesn't always map well to real hardware.
+The FPGA image implements the Pico-8 hardware... But that's not entirely true because the Pico-8 is a fantasy console so there is no real hardware! In fact Pico-8's fantasy hardware can't always be directly translated to real hardware. For this reason the FPGA image doesn't implement the Pico-8 fantasy hardware exactly because it doesn't always map well to real hardware.
 
 ### CPU
 
@@ -128,7 +128,7 @@ The nextp8 uses a m68k CPU with 32-bit registers and a 16-bit data bus. The Pico
 
 The display processor uses a frame buffer layout corresponding exactly to the Pico-8 screen memory layout. It supports a 16 colour display palette drawn from a 32 colour hardware palette. The 128x128 Pico-8 screen is centered and zoomed 6x. The output resolution is 1024x768@60Hz.
 
-The display processor supports native double buffering and the system contains VRAM for both the front and the back buffer
+The display processor supports native double buffering and the system contains VRAM for both the front and the back buffer, as well as an overlay front and back buffer used for the pause menu, etc.
 
 ### Audio Processor
 
@@ -140,10 +140,12 @@ The SFX core also supports custom instruments where the custom instrument SFX co
 
 ### Peripherals
 
-* SPI
-* Keyboard
-* Mouse
-* Joysticks
+* 2 x Joysticks
+* Keyboard (PS/2 and membrane)
+* Mouse (PS/2)
+* SD card (SD-SPI)
+* Wi-fi (ESP-01)
+* Real-time Clock
 
 ### Memory Map
 
@@ -187,7 +189,7 @@ Licences
 
 ### nextp8-core
 
-Copyright (C) 2025 Chris January and other authors.<br>
+Copyright (C) 2025-2026 Chris January and other authors.<br>
 Source Code: [https://github.com/atomice1/nextp8-core/](https://github.com/atomice1/nextp8-core/)<br>
 Licensed under the [GNU General Public License 3.0 or later](licences/gpl-3.0.txt)
 
@@ -195,7 +197,7 @@ Licensed under the [GNU General Public License 3.0 or later](licences/gpl-3.0.tx
 
 ### femto8-nextp8
 
-Copyright (C) 2025 Chris January<br>
+Copyright (C) 2025-2026 Chris January<br>
 Copyright 2023 Ben Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -219,7 +221,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### nextp8-bsp
 
-Copyright (C) 2025 Chris January<br>
+Copyright (C) 2025-2026 Chris January<br>
 Portions copyright various authors
 
 The authors hereby grant permission to use, copy, modify, distribute,
