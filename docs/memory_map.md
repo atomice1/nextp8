@@ -146,14 +146,14 @@ $1000000 +------------------------------------------+
          |   [r] [2] 00=power-on, 01=button, 10=sw  |
          |   [w] [8] 1=sw-initiated reset           |
          |           0xff=disable CPU               |
- $80000f | POST code [w] [6]                        |
- $80000c | debug reg lo [w] [16]                    |
- $80000a | debug reg hi [w] [16]                    |
- $800008 | version lo [16]                          |
- $800006 | version hi [16]                          |
- $800004 | build timestamp lo [16]                  |
- $800002 | build timestamp hi [16]                  |
- $800000 | parameters [16]                          |
+ $80000e | debug reg lo [w] [16]                    |
+ $80000c | debug reg hi [w] [16]                    |
+ $80000a | version lo [16]                          |
+ $800008 | version hi [16]                          |
+ $800006 | build timestamp lo [16]                  |
+ $800004 | build timestamp hi [16]                  |
+ $800003 | POST code [w] [6]                        |
+ $800001 | parameters [16]                          |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
          |                                          |
  $800000 +------------------------------------------+
