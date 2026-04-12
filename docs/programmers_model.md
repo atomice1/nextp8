@@ -4,7 +4,7 @@
 
 This document describes the hardware programmer's model for the nextp8 platform — a PICO-8 compatible FPGA core for the ZX Spectrum Next.
 
-The nextp8 FPGA image comprises a 68000 (m68k) compatible CPU with a set of memory-mapped peripherals. All peripheral registers are accessed via memory-mapped I/O (MMIO). There are no I/O port instructions.
+The nextp8 FPGA image comprises a 68010 (m68k) compatible CPU with a set of memory-mapped peripherals. All peripheral registers are accessed via memory-mapped I/O (MMIO). There are no I/O port instructions.
 
 ### 1.1 Conventions
 
@@ -20,7 +20,7 @@ The nextp8 FPGA image comprises a 68000 (m68k) compatible CPU with a set of memo
 
 ### 2.1 CPU
 
-- **Architecture:** 68000 (m68k), 32-bit registers, 16-bit data bus, big-endian.
+- **Architecture:** 68010 (m68k), 32-bit registers, 16-bit data bus, big-endian.
 - **Clock:** ~40 MHz (mclk). Bus cycles take 1 clock for SRAM, 3 clocks for MMIO/BRAM reads.
 - **Interrupt model:** Autovectored interrupts. IPL lines directly encode the interrupt level. Currently only Level 2 (VBlank) is used.
 - **Vector table:** 256 entries × 4 bytes at address `$000000`. Vector 0 = initial SSP, vector 1 = initial PC, vectors 25–31 = autovector levels 1–7.
