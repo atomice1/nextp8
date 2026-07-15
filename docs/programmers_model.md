@@ -710,7 +710,95 @@ uint8_t latched = *(volatile uint8_t*)(0x800080 + byte_index);
 
 Keyboard input is the OR of the PS/2 keyboard and the membrane keyboard (on the Spectrum Next board).
 
-### 12.3 Mouse
+### 12.3 Keyboard Event Queue
+
+The keyboard event queue stores up to 7 key press/release events in a FIFO buffer. Events are generated when keys change state and are pushed to the queue by hardware. Software reads events by polling the event registers. This prevents key events from being lost when the CPU is busy.
+
+**Event format (32 bits):**
+
+| Bit(s)      | Description                                    |
+|-------------|------------------------------------------------|
+| 31          | `0` = key press, `1` = key release             |
+| 30          | Membrane mode: `0` = PS/2 key, `1` = membrane key |
+| 29:28       | Reserved (0)                                   |
+| 27:24       | Lock keys: mode, scroll, caps, num             |
+| 23:16       | Modifiers: rgui, lgui, ralt, lalt, rctrl, lctrl, rshift, lshift |
+| 15:0        | USB HID scancode (16-bit)                      |
+
+**Memory map:**
+
+| Address    | Name                     | Access | Width | Description                                  |
+|------------|--------------------------|--------|-------|----------------------------------------------|
+| `$8000A8`  | KEYBOARD_EVENT_QUEUE_HI  | r      | 16    | Upper 16 bits of 32-bit event (bits 31:16)   |
+| `$8000AA`  | KEYBOARD_EVENT_QUEUE_LO  | r/w    | 16    | Lower 16 bits of 32-bit event (bits 15:0); write any value to clear queue |
+
+**Reading an event:**
+1. Read `KEYBOARD_EVENT_QUEUE_HI` to get bits 31:16.
+2. Read `KEYBOARD_EVENT_QUEUE_LO` to get bits 15:0 **and** pop the event from the queue.
+3. If the queue is empty, the read returns `0`.
+
+**Clearing the queue:**
+Write any value to `KEYBOARD_EVENT_QUEUE_LO`. This resets both read and write positions to 0.
+
+**Example (C):**
+```c
+// Read event without popping (polling)
+uint16_t hi = MMIO_REG16(0x8000A8);
+uint16_t lo = MMIO_REG16(0x8000AA);
+uint32_t event = (hi << 16) | lo;
+
+if (event != 0) {
+    uint8_t is_release = (event >> 31) & 1;
+    uint8_t is_membrane = (event >> 30) & 1;
+    uint8_t hid_scancode = event & 0xFFFF;
+    
+    if (is_release) {
+        printf("Key release: HID scancode 0x%02X\n", hid_scancode);
+    } else {
+        printf("Key press: HID scancode 0x%02X\n", hid_scancode);
+    }
+}
+
+// Pop event from queue
+uint32_t event = MMIO_REG32(0x8000A8);  // Reads HI then LO, popping the event
+
+// Clear the entire queue
+MMIO_REG16(0x8000AA) = 0;  // Write any value to clear
+```
+
+**Example (assembly, big-endian):**
+```asm
+    ; Read and pop event
+    move.l  ($8000A8), d0    ; 32-bit read: HI word first, then LO word
+    tst.l   d0
+    beq     no_event         ; d0 = 0 if queue empty
+    
+    ; Event format: d0 = [31:0] = [release][membrane][reserved][lock_keys][modifiers][hid_scancode]
+    ; Check if release event
+    btst    #31, d0
+    bne     press_event
+    ; Release event
+    ...
+press_event:
+    ; Press event
+    ...
+
+no_event:
+```
+
+**Queue depth:** 7 events (uses 8-element circular buffer, with one slot reserved to distinguish full from empty).
+
+**USB HID scancodes:** The queue uses USB HID scancodes (matching PICO-8/SDL 2), not PS/2 scancodes. For example:
+- `0x04` = 'A' key
+- `0x1C` = 'Enter' key
+- `0xE0` = Left Control
+- `0xE1` = Left Shift
+- `0xE2` = Left Alt
+- `0xE4` = Right Control
+
+See `nextp8.srcs/sources_1/keyboard.sv` for the full PS/2 to USB HID scancode mapping.
+
+### 12.4 Mouse
 
 PS/2 mouse position accumulators and button state.
 
