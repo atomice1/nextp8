@@ -1051,16 +1051,149 @@ These addresses are handled by the software model for console output. They are n
 
 ---
 
-## 17. SRAM Interface
+## 17. Bootloader
 
-### 17.1 Characteristics
+The nextp8 bootloader is a small program that runs from SRAM and loads the main application from an SD card into memory before jumping to it.
+
+### 17.1 Boot File
+
+The bootloader loads a file named `nextp8.bin` from the SD card. The default path is:
+
+- **Default path:** `/machines/NEXTP8/nextp8.bin`
+
+The path can be customized via the configuration block (see §17.4) or overridden using the `--loader-image` command line option (see §17.5).
+
+### 17.2 Memory Layout at Application Entry
+
+When the bootloader transfers control to the main application:
+
+| Register | Value |
+|----------|-------|
+| **SP** (Stack Pointer) | `memtop - 512` (end of RAM minus 512 bytes) |
+| **PC** (Program Counter) | `0x20000` (128KB into SRAM) |
+| **FP** (Frame Pointer) | `0` |
+| **RAM** | Application loaded at `0x20000`, zero-padded BSS section |
+
+**Memory map at entry:**
+- `0x000000` - `0x1FFFFF` - SRAM (free for application use)
+- `0x20000` - Application code/data (loaded from file)
+- `memtop - 512` - Initial stack pointer
+- `memtop - 256` - Loader data block (256 bytes, read-only for application)
+- `memtop - 512` - Config data block (256 bytes, read/write for application)
+- `memtop` - Top of detected RAM
+
+**RAM detection:** The bootloader performs a memory test to determine available RAM size (memtop), supporting 1MB to 8MB.
+
+### 17.3 Configuration Block
+
+The configuration block is copied to the new stack location and contains board-level settings:
+
+| Offset | Size | Name | Description |
+|--------|------|------|-------------|
+| 0 | 1 | video_timing | Video timing mode (0-7) |
+| 1 | 1 | scandoubler | Scandoubler (0=off, 1=on) |
+| 2 | 1 | frequency | 50Hz/60Hz (0=50, 1=60) |
+| 3 | 1 | ps2_mode | PS/2 mode (0=keyboard, 1=mouse) |
+| 4 | 1 | scanline_weight | Scanline effect (0=off, 1-3=strength) |
+| 5 | 1 | internal_speaker | Internal speaker (0=disabled, 1=enabled) |
+| 6 | 1 | hdmi_sound | HDMI sound (0=disabled, 1=enabled) |
+| 7-15 | 9 | reserved1 | Reserved |
+| 16-31 | 16 | userfile_selected | Userfile selection status |
+| 32-63 | 32 | core_path | Null-terminated core path |
+| 64-95 | 32 | reserved2 | Reserved |
+| 96-254 | 159 | cmdline | Pre-parsed command line arguments |
+| 255 | 1 | exit_action | Exit action (0=restart, 1=shutdown) |
+
+**Access (C):**
+```c
+#include <nextp8.h>
+
+// Access configuration data
+extern struct _config_data *_config_data;
+
+// Example: check PS/2 mode
+if (_config_data->ps2_mode == 0) {
+    // Keyboard mode
+}
+```
+
+### 17.4 Loader Data Block
+
+Passed 256 bytes above the config block, this block contains bootloader information:
+
+| Offset | Size | Name | Description |
+|--------|------|------|-------------|
+| 0 | 4 | magic | `LOADER_MAGIC` (0x12345432) |
+| 4 | 4 | loader_version | Version: API[31:24], MAJOR[23:16], MINOR[15:8], PATCH[7:0] |
+| 8 | 4 | loader_timestamp | Build timestamp |
+| 12 | 4 | entry_point | Application entry address (`0x20000`) |
+| 16 | 4 | memtop | Total RAM size detected |
+| 20 | 1 | reset_type | Reset type (0=power, 1=btn, 2=sw, 3=app_restart) |
+| 24-151 | 128 | loaded_path | Null-terminated file path loaded |
+
+**Access (C):**
+```c
+#include <nextp8.h>
+
+extern struct _loader_data *_loader_data;
+
+// Verify loader data
+if (_loader_data->magic == LOADER_MAGIC) {
+    printf("Loaded from: %s\n", _loader_data->loaded_path);
+    printf("RAM size: %d MB\n", _loader_data->memtop >> 20);
+}
+```
+
+### 17.5 Command Line Options
+
+**Software model only** (hardware uses SD card):
+
+```
+nextp8 [--loader-image <path>] <app_args...>
+```
+
+- `--loader-image <path>` - Override SD card path (format: `0:/path/to/file` or absolute path)
+- `<app_args...>` - Remaining arguments passed to the application via config cmdline
+
+**Example:**
+```bash
+# Load from custom path
+nextp8 --loader-image 0:/custom/path/app.bin arg1 arg2 arg3
+
+# Application receives:
+#   argc = 4
+#   argv[0] = "/custom/path/app.bin"
+#   argv[1] = "arg1"
+#   argv[2] = "arg2"
+#   argv[3] = "arg3"
+```
+
+**Command line format in config block:**
+- Each argument is null-terminated
+- Arguments are contiguous in memory
+- End marked by empty string (double null terminator)
+
+### 17.6 Boot Sequence Summary
+
+1. **Reset** - CPU starts at vector 1 (PC from vector table)
+2. **POST 4-6** - Hardware init (PLL, memory detection)
+3. **POST 11-18** - Bootloader runs, displays logo, shows version info
+4. **POST 19-22** - Loads application from SD card to `0x20000`
+5. **POST 23** - Sets up config/ loader data blocks, jumps to app
+6. **Application entry** - SP at `memtop-512`, PC at `0x20000`
+
+---
+
+## 18. SRAM Interface
+
+### 18.1 Characteristics
 
 - **Type:** IS61WV204816BLL-10BLI (4 MB, 16-bit, 10 ns).
 - **Address range:** `$000000`–`$3FFFFF` (4 MB, byte-addressed).
 - **Access time:** 1 CPU clock cycle.
 - **Bus width:** 16-bit. The CPU supports individual byte lane selection via UDS#/LDS# signals.
 
-### 17.2 SRAM and DMA Arbitration
+### 18.2 SRAM and DMA Arbitration
 
 The P8 audio subsystem accesses SRAM via DMA for reading SFX and music data. DMA has priority over CPU accesses:
 - When a DMA request is pending, the CPU is stalled until the DMA transfer completes.
@@ -1068,9 +1201,9 @@ The P8 audio subsystem accesses SRAM via DMA for reading SFX and music data. DMA
 
 ---
 
-## 18. MMIO Register Access Model
+## 19. MMIO Register Access Model
 
-### 18.1 MMIO Access Types
+### 19.1 MMIO Access Types
 
 | Address Range       | Width        | Cycle Count | Notes                           |
 |---------------------|--------------|-------------|---------------------------------|
@@ -1081,7 +1214,7 @@ The P8 audio subsystem accesses SRAM via DMA for reading SFX and music data. DMA
 | `$c08000`–`$c0801F` (Palette)| 8 or 16 bit | 1 (write) / 3 (read) | Palette BRAM         |
 | `$c0c000`–`$c0FFFF` (DA Mem) | 8 or 16 bit | 1 (write) / 3 (read) | Audio sample BRAM   |
 
-### 18.2 Register Access Helpers (C)
+### 19.2 Register Access Helpers (C)
 
 All driver code should use volatile memory-mapped I/O macros:
 
@@ -1092,7 +1225,7 @@ All driver code should use volatile memory-mapped I/O macros:
 #define MMIO_REG64(addr)  (*(volatile uint64_t *)(addr))
 ```
 
-### 18.3 Byte Access Alignment
+### 19.3 Byte Access Alignment
 
 MMIO registers at odd byte addresses (`$800003`, `$800011`, etc.) are accessed as 8-bit reads/writes using the lower data strobe (LDS#). The CPU handles this automatically via the m68k byte-access instructions (`move.b`).
 
@@ -1100,7 +1233,7 @@ For 16-bit registers, the address must be word-aligned (even). The hardware mirr
 
 ---
 
-## 19. System Startup Checklist
+## 20. System Startup Checklist
 
 For RTOS bring-up, the minimum initialization sequence is:
 
@@ -1128,8 +1261,8 @@ For RTOS bring-up, the minimum initialization sequence is:
 | `$800006`  | BUILD_TIMESTAMP_LO | r   | 16    | §4      |
 | `$800008`  | HW_VERSION_HI      | r   | 16    | §4      |
 | `$80000A`  | HW_VERSION_LO      | r   | 16    | §4      |
-| `$80000C`  | DEBUG_REG_HI       | rw  | 16    | §15     |
-| `$80000E`  | DEBUG_REG_LO       | rw  | 16    | §15     |
+| `$80000C`  | DEBUG_REG_HI       | rw  | 16    | §16     |
+| `$80000E`  | DEBUG_REG_LO       | rw  | 16    | §16     |
 | `$800011`  | RESET_TYPE / REQ   | rw  | 8     | §3.3    |
 | `$800013`  | VBLANK_INTR_CTRL   | w   | 8     | §5.2    |
 | `$800014`  | UTIMER[63:48]      | r   | 16    | §6.1    |
