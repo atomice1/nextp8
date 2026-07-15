@@ -681,7 +681,7 @@ MMIO_REG8(0x80004D) = pressed;  // Clear latched bits
 
 ### 12.2 Keyboard
 
-PS/2 keyboard input is stored as a 256-bit matrix (32 bytes), indexed by PS/2 scan code (set 2). Extended scan codes use bit 7 set (i.e., `scancode | 0x80`).
+Keyboard input is stored as a 256-bit matrix (32 bytes), indexed by **USB HID scancode** (8-bit). PS/2 keyboard events are translated to USB HID scancodes before being stored in the matrix. The `keyboard.sv` module handles the translation from PS/2 scancodes to USB HID scancodes, including special keys (arrows, F1-F12, numpad, modifier keys).
 
 | Address range      | Name                     | Access | Size    | Description           |
 |---------------------|--------------------------|--------|---------|-----------------------|
@@ -691,9 +691,10 @@ PS/2 keyboard input is stored as a 256-bit matrix (32 bytes), indexed by PS/2 sc
 The matrix is organized as 32 bytes, each containing 8 scan-code flags.
 
 ```c
-// Check if scan code 0x1C (key 'A') is pressed
-uint8_t byte_index = 0x1C / 8;  // = 3
-uint8_t bit_mask   = 1 << (0x1C % 8);  // = 1 << 4
+// Check if scan code 0x04 (key 'A', USB HID) is pressed
+// The matrix is indexed by the low 8 bits of the USB HID scancode
+uint8_t byte_index = 0x04 / 8;  // = 0
+uint8_t bit_mask   = 1 << (0x04 % 8);  // = 1 << 4
 if (*(volatile uint8_t*)(0x800060 + byte_index) & bit_mask) {
     // Key 'A' is pressed
 }
@@ -708,7 +709,35 @@ uint8_t latched = *(volatile uint8_t*)(0x800080 + byte_index);
 *(volatile uint8_t*)(0x800080 + byte_index) = latched;  // Write 1s to clear
 ```
 
-Keyboard input is the OR of the PS/2 keyboard and the membrane keyboard (on the Spectrum Next board).
+**USB HID scancodes:** The matrix uses USB HID scancodes (matching PICO-8/SDL 2), not PS/2 scancodes. For example:
+- `0x04` = 'A' key
+- `0x05` = 'B' key
+- `0x06` = 'C' key
+- `0x1C` = 'Enter' key
+- `0x29` = Space bar
+- `0x2A` = Backspace
+- `0x2B` = Tab
+- `0x2C` = Space bar
+- `0x2F` = '['
+- `0x30` = ']'
+- `0x31` = '\'
+- `0x33` = ';'
+- `0x34` = '''
+- `0x36` = ','
+- `0x37` = '.'
+- `0x38` = '/'
+- `0xE0` = Left Control
+- `0xE1` = Left Shift
+- `0xE2` = Left Alt
+- `0xE3` = Left GUI (Windows key)
+- `0xE4` = Right Control
+- `0xE5` = Right Shift
+- `0xE6` = Right Alt
+- `0xE7` = Right GUI
+
+Keyboard input is the OR of the PS/2 keyboard and the membrane keyboard (on the Spectrum Next board). Both sources are translated to USB HID scancodes before being combined in the matrix.
+
+**Note:** The PS/2 to USB HID scancode mapping is performed by the `keyboard.sv` module. See `nextp8.srcs/sources_1/keyboard.sv` for the full mapping table. PS/2 keys that use the extended prefix (0xE0) have their own unique scancodes (e.g., PS/2 0x14 maps to USB HID 0xE0 for Left Control). The 0xE0 prefix in PS/2 is not the scancode itself but a prefix indicating extended keys.
 
 ### 12.3 Keyboard Event Queue
 
