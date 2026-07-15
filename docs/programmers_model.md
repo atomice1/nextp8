@@ -40,6 +40,10 @@ $c08020  +----------------------------------------------+
 $c08010  +----------------------------------------------+
          | Display Palette — back buffer  [16 × 8-bit]   |
 $c08000  +----------------------------------------------+
+         | Secondary Palette            [16 × 8-bit]    |
+$c08030  +----------------------------------------------+
+         | High colour bitfield         [16 bytes]      |
+$c08040  +----------------------------------------------+
          | Overlay Front Buffer  [8 KB]                  |
 $c06000  +----------------------------------------------+
          | Overlay Back Buffer   [8 KB]                  |
@@ -311,6 +315,72 @@ MMIO_REG8(0x80001F) = 0x40 | 0x00;  // Enable, key color = 0
 ```
 
 **Note:** The overlay frame buffer uses the system palette directly and is not affected by remapping palette changes.
+
+### 7.6 Screen Transform
+
+Controls display scaling and rotation. The screen transform mode is applied after the display is rendered.
+
+| Address    | Name              | Access | Width | Description                           |
+|------------|-------------------|--------|-------|---------------------------------------|
+| `$8000A1`  | SCREEN_TRANSFORM  | rw     | 8     | Bits [2:0]: transform mode (0-7)      |
+
+**Transform modes:**
+
+| Value | Description                    |
+|-------|--------------------------------|
+| 0     | Normal (no transform)          |
+| 1     | 2× horizontal zoom             |
+| 2     | 2× vertical zoom               |
+| 3     | 2× horizontal and vertical     |
+| 4     | 3× horizontal zoom             |
+| 5     | 3× vertical zoom               |
+| 6     | 3× horizontal and vertical     |
+| 7     | 4× horizontal and vertical     |
+
+**Note:** Transform modes affect only the display output, not the frame buffer contents.
+
+### 7.7 High Colour Mode
+
+The high colour mode provides a 128-bit bitfield that can be used for per-line palette selection or other per-line effects. Each bit in the 128-bit bitfield corresponds to one scanline (row) of the display.
+
+| Address range      | Name                     | Access | Size    | Description           |
+|---------------------|--------------------------|--------|---------|-----------------------|
+| `$8000A3`  | HIGH_COLOUR_MODE      | rw     | 8       | Bit 0: enable high colour mode |
+
+**High colour bitfield memory (16 bytes = 128 bits):**
+
+| Address range       | Name                     | Access | Size    | Description           |
+|---------------------|--------------------------|--------|---------|-----------------------|
+| `$c08040`–`$c0804F` | HIGH_COLOUR_BITFIELD    | rw     | 16 bytes| Per-scanline bitfield |
+
+**Enable high colour mode (C):**
+```c
+// Enable high colour mode
+MMIO_REG8(0x8000A3) = 0x01;
+
+// Set bitfield for first 16 scanlines
+uint8_t *bf = (uint8_t*)0xc08040;
+for (int i = 0; i < 16; i++) {
+    bf[i] = 0xFF;  // Set all 8 bits for this scanline group
+}
+```
+
+### 7.8 Secondary Palette
+
+The secondary palette provides an additional palette layer that can be applied after the primary palette. This enables advanced effects like per-line palette swaps or dynamic color remapping.
+
+| Address range      | Name                     | Access | Size    | Description           |
+|---------------------|--------------------------|--------|---------|-----------------------|
+| `$c08030`–`$c0803F` | SECONDARY_PALETTE      | rw     | 16 bytes| 16 secondary palette entries |
+
+**Secondary palette format:** Each byte is a 5-bit system color index (bits [4:0]). Bit 7 is unused.
+
+**Set secondary palette entry (C):**
+```c
+// Map PICO-8 color `slot` to system color `sys_color` (0–31)
+uint8_t val = sys_color & 0x1F;  // 5-bit color index
+*((volatile uint8_t*)(0xc08030 + slot)) = val;
+```
 
 ---
 
