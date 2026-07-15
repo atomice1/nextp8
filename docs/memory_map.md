@@ -82,6 +82,18 @@ $1000000 +------------------------------------------+
  $8000a0 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
+ $8000aa | key event queue lo [rw] [16]             |
+         |   [r] [15:0] scancode                    |
+         |   [w] clear key event queue              |
+ $8000a8 | key event queue hi [r] [16]              |
+         |   [r] [0] lshift [1] rshift              |
+         |       [2] lctrl [3] rctrl                |
+         |       [4] lalt [5] ralt                  |
+         |       [6] lgui [7] rgui                  |
+         |       [8] num lock [9] caps lock         |
+         |       [10] scroll lock [11] mode         |
+         |       [14] membrane                      |
+         |       [15] release                       |
  $8000a3 | high-colour mode [w] [8]                 |
  $8000a1 | screen transform [w] [8]                 |
  $800080 | latched keyboard matrix [rw] [256]       |
