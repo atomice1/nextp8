@@ -170,7 +170,7 @@ The nextp8 bootloader is loaded by the Next core loader before resetting into th
 
 [nextp8-bsp](https://github.com/atomice1/nextp8-bsp)
 
-The BSP is based on newlib. It contains basic frame buffer support as well as drivers for the SD card in SPI mode, and the FAT32 filesystem.
+The BSP is based on newlib. It contains drivers for the SD card in SPI mode and the FAT32 filesystem, as well as basic frame buffer support.
 
 ### Toolchain
 
@@ -182,7 +182,7 @@ The toolchain is based on GCC, binutils and newlib.
 
 [sQLux-nextp8](https://github.com/atomice1/sQLux-nextp8/)
 
-The nextp8 software model is designed to facilitate pre-silicon firmware development. It is based on the sQLux Sinclair QL emulator.
+The nextp8 software model is designed to facilitate pre-silicon firmware development. It is based on the sQLux Sinclair QL emulator but has been heavily modified for nextp8.
 
 Licences
 --------
@@ -240,7 +240,7 @@ Some components are licensed under the [Apache License 2.0](licences/apache-2.0.
 
 ### nextp8-loader
 
-Copyright (C) 2025 Chris January
+Copyright (C) 2025-2026 Chris January
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

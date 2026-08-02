@@ -64,19 +64,6 @@ $200000  +----------------------------------------------+
 $000000  +----------------------------------------------+
 ```
 
-### 2.3 Clock Domains
-
-| Clock       | Frequency     | Domain                                        |
-|-------------|---------------|-----------------------------------------------|
-| `clk_sys`   | ~11 MHz       | UART, SPI, I2C, keyboard, mouse, timers       |
-| `mclk`      | ~40 MHz       | CPU, MMIO state machine, VRAM writes           |
-| `clk65`     | 65 MHz        | Pixel clock, DAC, HDMI, audio mixing           |
-| `clk_video` | 32.5 MHz      | Video timing, VRAM read port                   |
-| `clk_pcm`   | ~22.05 kHz    | P8 audio sample output rate                   |
-| `clk_pcm_8x`| ~176.4 kHz   | P8 audio time-multiplexed processing           |
-
-All CPU-visible register accesses are synchronized to the `mclk` domain. The hardware handles clock domain crossing (CDC) transparently.
-
 ---
 
 ## 3. Reset and Boot
@@ -240,7 +227,7 @@ void delay_us(uint32_t us) {
 - **Resolution:** 128 × 128 pixels, 4-bit indexed color (16 colors from a 32-color system palette).
 - **Output:** 1024 × 768 @ 60 Hz (6× zoom, centered). VGA and HDMI outputs.
 - **Double buffering:** Hardware-managed front/back buffer swap.
-- **Overlay:** A second 128 × 128 frame buffer composited on top with chroma-key transparency.
+- **Overlay:** A second 128 × 128 frame buffer composited on top with palette-index transparency.
 
 ### 7.2 Frame Buffer Memory
 
@@ -303,7 +290,7 @@ uint8_t val = (sys_color & 0x10) ? 0x80 | (sys_color & 0x0F) : (sys_color & 0x0F
 
 ### 7.5 Overlay
 
-The overlay composites a second 128 × 128 frame buffer on top of the main display using chroma-key transparency. Pixels matching the key color are transparent, showing the main buffer through.
+The overlay composites a second 128 × 128 frame buffer on top of the main display using palette-index transparency. Pixels matching the transparent index are transparent, showing the main buffer through.
 
 | Address    | Name            | Access | Width | Description                                               |
 |------------|-----------------|--------|-------|-----------------------------------------------------------|
@@ -318,7 +305,8 @@ MMIO_REG8(0x80001F) = 0x40 | 0x00;  // Enable, key color = 0
 
 ### 7.6 Screen Transform
 
-Controls display scaling and rotation. The screen transform mode is applied after the display is rendered.
+Controls display scaling and rotation. The screen transform mode is applied after the display is rendered and affect
+only the main layer and not the overlay.
 
 | Address    | Name              | Access | Width | Description                           |
 |------------|-------------------|--------|-------|---------------------------------------|
@@ -343,15 +331,15 @@ Controls display scaling and rotation. The screen transform mode is applied afte
 
 The high colour mode provides a 128-bit bitfield that can be used for per-line palette selection or other per-line effects. Each bit in the 128-bit bitfield corresponds to one scanline (row) of the display.
 
-| Address range      | Name                     | Access | Size    | Description           |
+| Address range       | Name                     | Access | Size    | Description           |
 |---------------------|--------------------------|--------|---------|-----------------------|
-| `$8000A3`  | HIGH_COLOUR_MODE      | rw     | 8       | Bit 0: enable high colour mode |
+| `$8000A3`           | HIGH_COLOUR_MODE         | rw     | 8       | Bit 0: enable high colour mode |
 
 **High colour bitfield memory (16 bytes = 128 bits):**
 
 | Address range       | Name                     | Access | Size    | Description           |
 |---------------------|--------------------------|--------|---------|-----------------------|
-| `$c08040`–`$c0804F` | HIGH_COLOUR_BITFIELD    | rw     | 16 bytes| Per-scanline bitfield |
+| `$c08040`–`$c0804F` | HIGH_COLOUR_BITFIELD     | rw     | 16 bytes| Per-scanline bitfield |
 
 **Enable high colour mode (C):**
 ```c
@@ -369,9 +357,9 @@ for (int i = 0; i < 16; i++) {
 
 The secondary palette provides an additional palette layer that can be applied after the primary palette. This enables advanced effects like per-line palette swaps or dynamic color remapping.
 
-| Address range      | Name                     | Access | Size    | Description           |
-|---------------------|--------------------------|--------|---------|-----------------------|
-| `$c08030`–`$c0803F` | SECONDARY_PALETTE      | rw     | 16 bytes| 16 secondary palette entries |
+| Address range      | Name                      | Access | Size    | Description                  |
+|---------------------|--------------------------|--------|---------|------------------------------|
+| `$c08030`–`$c0803F` | SECONDARY_PALETTE        | rw     | 16 bytes| 16 secondary palette entries |
 
 **Secondary palette format:** Each byte is a 5-bit system color index (bits [4:0]). Bit 7 is unused.
 
@@ -392,19 +380,19 @@ A simple UART connected to GPIO pins 14/15 (directly accessible via a serial ter
 
 ### 8.2 Registers
 
-| Address    | Name          | Access | Width  | Description                                   |
-|------------|---------------|--------|--------|-----------------------------------------------|
-| `$800031`  | UART_CTRL     | rw     | 8      | See bit definitions below                     |
+| Address    | Name          | Access | Width  | Description                                    |
+|------------|---------------|--------|--------|------------------------------------------------|
+| `$800031`  | UART_CTRL     | rw     | 8      | See bit definitions below                      |
 | `$800033`  | UART_DATA     | rw     | 8      | TX: write byte to send. RX: read received byte |
-| `$800034`  | UART_BAUD_DIV | w      | 16     | Baud rate divider (15-bit)                    |
+| `$800034`  | UART_BAUD_DIV | w      | 16     | Baud rate divider (15-bit)                     |
 
 **UART_CTRL read bits (status):**
 
-| Bit | Name       | Description                    |
-|-----|------------|--------------------------------|
-| 0   | DATA_READY | `1` = received byte available  |
-| 1   | READY      | `1` = transmitter is ready     |
-| 2   | READ_ACK   | `1` = read has been acknowledged|
+| Bit | Name       | Description                      |
+|-----|------------|----------------------------------|
+| 0   | DATA_READY | `1` = received byte available    |
+| 1   | READY      | `1` = transmitter is ready       |
+| 2   | READ_ACK   | `1` = read has been acknowledged |
 | 3   | WRITE_ACK  | `1` = write has been acknowledged|
 
 **UART_CTRL write bits (control):**
@@ -433,7 +421,8 @@ void uart_write_byte(uint8_t byte) {
     // 2. Wait for transmitter ready
     while (!(MMIO_REG8(0x800031) & 0x02)) { }
 
-    // 3. Pulse write strobe (3 cycles to ensure CDC crossing)
+    // 3. Pulse write strobe (4 cycles to ensure CDC crossing)
+    MMIO_REG8(0x800031) = 0x01;
     MMIO_REG8(0x800031) = 0x01;
     MMIO_REG8(0x800031) = 0x01;
     MMIO_REG8(0x800031) = 0x01;
@@ -441,7 +430,7 @@ void uart_write_byte(uint8_t byte) {
 }
 ```
 
-The write strobe must be held for at least 3 consecutive writes to ensure it crosses the clock domain boundary from `mclk` to `clk_sys`.
+The write strobe must be held for at least 4 consecutive writes to ensure it crosses the clock domain boundary from `mclk` to `clk_sys`.
 
 ### 8.5 Receive a Byte
 
@@ -455,6 +444,7 @@ int uart_read_byte(void) {
     uint8_t byte = MMIO_REG8(0x800033);
 
     // 3. Pulse read strobe to acknowledge
+    MMIO_REG8(0x800031) = 0x02;
     MMIO_REG8(0x800031) = 0x02;
     MMIO_REG8(0x800031) = 0x02;
     MMIO_REG8(0x800031) = 0x02;
@@ -474,10 +464,10 @@ A second UART connected to an ESP-01 (ESP8266) module for Wi-Fi. The ESP module 
 
 ### 9.2 Registers
 
-| Address    | Name          | Access | Width  | Description                                   |
-|------------|---------------|--------|--------|-----------------------------------------------|
-| `$800037`  | ESP_CTRL      | rw     | 8      | Same bit layout as UART_CTRL (see §8.2)      |
-| `$800039`  | ESP_DATA      | rw     | 8      | TX/RX data byte                               |
+| Address    | Name          | Access | Width  | Description                                                |
+|------------|---------------|--------|--------|------------------------------------------------------------|
+| `$800037`  | ESP_CTRL      | rw     | 8      | Same bit layout as UART_CTRL (see §8.2)                    |
+| `$800039`  | ESP_DATA      | rw     | 8      | TX/RX data byte                                            |
 | `$80003A`  | ESP_BAUD_DIV  | r      | 16     | Baud rate divider (15-bit, read-only; default 95 = 115200) |
 
 ### 9.3 Write a Byte
@@ -489,6 +479,7 @@ void esp_write_byte(uint8_t byte) {
     while (!(MMIO_REG8(0x800037) & 0x02)) { }  // Wait READY
 
     MMIO_REG8(0x800037) = 0x01;   // Pulse write strobe
+    MMIO_REG8(0x800037) = 0x01;
     MMIO_REG8(0x800037) = 0x01;
     MMIO_REG8(0x800037) = 0x01;
     MMIO_REG8(0x800037) = 0x00;
@@ -505,6 +496,7 @@ int esp_read_byte(uint8_t *out, uint32_t timeout_us) {
             *out = MMIO_REG8(0x800039);
 
             MMIO_REG8(0x800037) = 0x02;          // Pulse read strobe
+            MMIO_REG8(0x800037) = 0x02;
             MMIO_REG8(0x800037) = 0x02;
             MMIO_REG8(0x800037) = 0x02;
             MMIO_REG8(0x800037) = 0x00;
@@ -540,12 +532,12 @@ An SD card controller operating in SPI mode. Two chip select lines are available
 
 ### 10.2 Registers
 
-| Address    | Name              | Access | Width | Description                                |
-|------------|-------------------|--------|-------|--------------------------------------------|
-| `$800021`  | SDSPI_WRITE_ENABLE| w      | 1     | `1` = latch data_in and start SPI transfer; `0` = idle |
-| `$800023`  | SDSPI_DIVIDER     | w      | 8     | SPI clock divider: `spi_clk = 11 MHz / divider` |
-| `$800025`  | SDSPI_DATA_IN     | w      | 8     | Byte to transmit (MOSI)                   |
-| `$800027`  | SDSPI_DATA_OUT    | r      | 8     | Received byte (MISO)                      |
+| Address    | Name              | Access | Width | Description                                                        |
+|------------|-------------------|--------|-------|--------------------------------------------------------------------|
+| `$800021`  | SDSPI_WRITE_ENABLE| w      | 1     | `1` = latch data_in and start SPI transfer; `0` = idle             |
+| `$800023`  | SDSPI_DIVIDER     | w      | 8     | SPI clock divider: `spi_clk = 11 MHz / divider`                    |
+| `$800025`  | SDSPI_DATA_IN     | w      | 8     | Byte to transmit (MOSI)                                            |
+| `$800027`  | SDSPI_DATA_OUT    | r      | 8     | Received byte (MISO)                                               |
 | `$800029`  | SDSPI_READY       | r      | 1     | `1` = SPI transfer in progress / data latched; `0` = idle/complete |
 | `$80002B`  | SDSPI_CHIP_SELECT | w      | 2     | Bit 0: CS0# (active low), Bit 1: CS1# (active low). Write `$FF` to deassert all. |
 
@@ -617,11 +609,11 @@ A single-master I2C controller hardcoded to address `$68` (DS1307 RTC). The bus 
 
 ### 11.2 Registers
 
-| Address    | Name       | Access | Width | Description                         |
-|------------|------------|--------|-------|-------------------------------------|
-| `$80003D`  | I2C_DATA   | rw     | 8     | Write: data to send. Read: received data. |
+| Address    | Name       | Access | Width | Description                                                             |
+|------------|------------|--------|-------|-------------------------------------------------------------------------|
+| `$80003D`  | I2C_DATA   | rw     | 8     | Write: data to send. Read: received data.                               |
 | `$80003F`  | I2C_CTRL   | w      | 8     | Bit 0: ENA (enable/latch command). Bit 1: RW (`0` = write, `1` = read). |
-| `$80003F`  | I2C_STATUS | r      | 8     | Bit 0: BUSY. Bit 1: ERR (NACK error). |
+| `$80003F`  | I2C_STATUS | r      | 8     | Bit 0: BUSY. Bit 1: ERR (NACK error).                                   |
 
 ### 11.3 I2C Protocol
 
@@ -754,7 +746,7 @@ MMIO_REG8(0x80004D) = pressed;  // Clear latched bits
 Keyboard input is stored as a 256-bit matrix (32 bytes), indexed by **USB HID scancode** (8-bit). PS/2 keyboard events are translated to USB HID scancodes before being stored in the matrix. The `keyboard.sv` module handles the translation from PS/2 scancodes to USB HID scancodes, including special keys (arrows, F1-F12, numpad, modifier keys).
 
 | Address range      | Name                     | Access | Size    | Description           |
-|---------------------|--------------------------|--------|---------|-----------------------|
+|---------------------|--------------------------|--------|---------|----------------------|
 | `$800060`–`$80007F` | KEYBOARD_MATRIX         | r      | 256 bits| Current key state     |
 | `$800080`–`$80009F` | KEYBOARD_MATRIX_LATCHED | rw     | 256 bits| Edge-detected state   |
 
@@ -815,14 +807,14 @@ The keyboard event queue stores up to 7 key press/release events in a FIFO buffe
 
 **Event format (32 bits):**
 
-| Bit(s)      | Description                                    |
-|-------------|------------------------------------------------|
-| 31          | `0` = key press, `1` = key release             |
-| 30          | Membrane mode: `0` = PS/2 key, `1` = membrane key |
-| 29:28       | Reserved (0)                                   |
-| 27:24       | Lock keys: mode, scroll, caps, num             |
+| Bit(s)      | Description                                                     |
+|-------------|-----------------------------------------------------------------|
+| 31          | `0` = key press, `1` = key release                              |
+| 30          | Membrane mode: `0` = PS/2 key, `1` = membrane key               |
+| 29:28       | Reserved (0)                                                    |
+| 27:24       | Lock keys: mode, scroll, caps, num                              |
 | 23:16       | Modifiers: rgui, lgui, ralt, lalt, rctrl, lctrl, rshift, lshift |
-| 15:0        | USB HID scancode (16-bit)                      |
+| 15:0        | USB HID scancode (16-bit)                                       |
 
 **Memory map:**
 
@@ -931,11 +923,11 @@ A sample-based audio playback engine reading from an 8192-sample circular buffer
 
 ### 13.2 Registers
 
-| Address    | Name        | Access | Width | Description                                          |
-|------------|-------------|--------|-------|------------------------------------------------------|
-| `$800040`  | DA_CONTROL  | w      | 16    | Bit 0: start playback. Bit 8: mono mode.             |
+| Address    | Name        | Access | Width | Description                                           |
+|------------|-------------|--------|-------|-------------------------------------------------------|
+| `$800040`  | DA_CONTROL  | w      | 16    | Bit 0: start playback. Bit 8: mono mode.              |
 | `$800040`  | DA_ADDRESS  | r      | 16    | Bits [12:0]: current playback sample address (0–8191) |
-| `$800042`  | DA_PERIOD   | w      | 16    | Sample period in 65 MHz clock ticks                  |
+| `$800042`  | DA_PERIOD   | w      | 16    | Sample period in 65 MHz clock ticks                   |
 
 ### 13.3 Sample Memory
 
@@ -954,11 +946,11 @@ period = 65000000 / sample_rate
 ```
 
 | Sample Rate | Period Value |
-|-------------|-------------|
-| 5512.5 Hz   | 11791       |
-| 11025 Hz    | 5895        |
-| 22050 Hz    | 2948        |
-| 44100 Hz    | 1474        |
+|-------------|--------------|
+| 5512.5 Hz   | 11791        |
+| 11025 Hz    | 5895         |
+| 22050 Hz    | 2948         |
+| 44100 Hz    | 1474         |
 
 ### 13.5 Playback Sequence
 
@@ -1012,8 +1004,8 @@ The P8 audio subsystem implements the PICO-8 SFX and MUSIC engines in hardware. 
 
 **Status registers (read-only):**
 
-| Address    | Name            | Width | Description                                       |
-|------------|-----------------|-------|---------------------------------------------------|
+| Address    | Name             | Width | Description                                       |
+|------------|------------------|-------|---------------------------------------------------|
 | `$800120`  | P8AUDIO_STAT46   | 16    | SFX index playing on channel 0 (`-1` = none)      |
 | `$800122`  | P8AUDIO_STAT47   | 16    | SFX index playing on channel 1                    |
 | `$800124`  | P8AUDIO_STAT48   | 16    | SFX index playing on channel 2                    |
@@ -1036,13 +1028,13 @@ SFX data must be placed in SRAM at the address configured via `P8AUDIO_SFX_BASE`
 
 **Note encoding (16-bit, little-endian):**
 
-| Bits    | Field   | Values                                                                    |
-|---------|---------|---------------------------------------------------------------------------|
-| 15      | Custom  | `1` = custom waveform instrument                                          |
+| Bits    | Field   | Values                                                                            |
+|---------|---------|-----------------------------------------------------------------------------------|
+| 15      | Custom  | `1` = custom waveform instrument                                                  |
 | 14–12   | Effect  | 0=none, 1=slide, 2=vibrato, 3=drop, 4=fade-in, 5=fade-out, 6=arp-fast, 7=arp-slow |
-| 11–9    | Volume  | 0–7                                                                       |
-| 8–6     | Waveform| 0=sine, 1=tri, 2=saw, 3=square, 4=pulse, 5=organ, 6=noise, 7=phaser     |
-| 5–0     | Pitch   | 0–63 (note index)                                                        |
+| 11–9    | Volume  | 0–7                                                                               |
+| 8–6     | Waveform| 0=sine, 1=tri, 2=saw, 3=square, 4=pulse, 5=organ, 6=noise, 7=phaser               |
+| 5–0     | Pitch   | 0–63 (note index)                                                                 |
 
 **Header bytes (offset 64–67 within each SFX slot):**
 
@@ -1141,8 +1133,8 @@ Writes to these registers are printed to the simulation console (via `$display`)
 
 ## 16. Tube Interface (Simulation Only)
 
-| Address      | Description                                   |
-|--------------|-----------------------------------------------|
+| Address      | Description                                    |
+|--------------|------------------------------------------------|
 | `$FFFFFE`    | Stdout byte output (simulation/software model) |
 | `$FFFFFF`    | Stderr byte output (simulation/software model) |
 
@@ -1166,12 +1158,12 @@ The path can be customized via the configuration block (see §17.4) or overridde
 
 When the bootloader transfers control to the main application:
 
-| Register | Value |
-|----------|-------|
-| **SP** (Stack Pointer) | `memtop - 512` (end of RAM minus 512 bytes) |
-| **PC** (Program Counter) | `0x20000` (128KB into SRAM) |
-| **FP** (Frame Pointer) | `0` |
-| **RAM** | Application loaded at `0x20000`, zero-padded BSS section |
+| Register                 | Value                                                    |
+|--------------------------|----------------------------------------------------------|
+| **SP** (Stack Pointer)   | `memtop - 512` (end of RAM minus 512 bytes)              |
+| **PC** (Program Counter) | `0x20000` (128KB into SRAM)                              |
+| **FP** (Frame Pointer)   | `0`                                                      |
+| **RAM**                  | Application loaded at `0x20000`, zero-padded BSS section |
 
 **Memory map at entry:**
 - `0x000000` - `0x1FFFFF` - SRAM (free for application use)
@@ -1304,14 +1296,14 @@ The P8 audio subsystem accesses SRAM via DMA for reading SFX and music data. DMA
 
 ### 19.1 MMIO Access Types
 
-| Address Range       | Width        | Cycle Count | Notes                           |
-|---------------------|--------------|-------------|---------------------------------|
-| `$000000`–`$3FFFFF` (SRAM)  | 8 or 16 bit | 1           | Direct SRAM access              |
-| `$800000`–`$8000FF` (MMIO)  | 8 or 16 bit | 3           | System peripheral registers     |
-| `$800100`–`$8001FF` (P8Audio)| 8 or 16 bit | 3           | Audio subsystem registers       |
-| `$c00000`–`$c07FFF` (VRAM)  | 8 or 16 bit | 1 (write) / 3 (read) | Frame buffer BRAM    |
-| `$c08000`–`$c0801F` (Palette)| 8 or 16 bit | 1 (write) / 3 (read) | Palette BRAM         |
-| `$c0c000`–`$c0FFFF` (DA Mem) | 8 or 16 bit | 1 (write) / 3 (read) | Audio sample BRAM   |
+| Address Range                 | Width        | Cycle Count          | Notes                           |
+|-------------------------------|--------------|----------------------|---------------------------------|
+| `$000000`–`$3FFFFF` (SRAM)    | 8 or 16 bit  | 1                    | Direct SRAM access              |
+| `$800000`–`$8000FF` (MMIO)    | 8 or 16 bit  | 3                    | System peripheral registers     |
+| `$800100`–`$8001FF` (P8Audio) | 8 or 16 bit  | 3                    | Audio subsystem registers       |
+| `$c00000`–`$c07FFF` (VRAM)    | 8 or 16 bit  | 1 (write) / 3 (read) | Frame buffer BRAM               |
+| `$c08000`–`$c0801F` (Palette) | 8 or 16 bit  | 1 (write) / 3 (read) | Palette BRAM                    |
+| `$c0c000`–`$c0FFFF` (DA Mem)  | 8 or 16 bit  | 1 (write) / 3 (read) | Audio sample BRAM               |
 
 ### 19.2 Register Access Helpers (C)
 
@@ -1399,10 +1391,10 @@ For RTOS bring-up, the minimum initialization sequence is:
 | `$800080`  | KBD_MATRIX_LATCHED | rw  | 256b  | §12.2   |
 | `$800100`  | P8AUDIO_VERSION    | r   | 16    | §14.2   |
 | `$800102`  | P8AUDIO_CTRL       | w   | 16    | §14.2   |
-| `$800104`  | P8AUDIO_SFX_BASE_HI| w  | 16    | §14.2   |
-| `$800106`  | P8AUDIO_SFX_BASE_LO| w  | 16    | §14.2   |
-| `$800108`  | P8AUDIO_MUS_BASE_HI| w  | 16    | §14.2   |
-| `$80010A`  | P8AUDIO_MUS_BASE_LO| w  | 16    | §14.2   |
+| `$800104`  | P8AUDIO_SFX_BASE_HI| w   | 16    | §14.2   |
+| `$800106`  | P8AUDIO_SFX_BASE_LO| w   | 16    | §14.2   |
+| `$800108`  | P8AUDIO_MUS_BASE_HI| w   | 16    | §14.2   |
+| `$80010A`  | P8AUDIO_MUS_BASE_LO| w   | 16    | §14.2   |
 | `$80010D`  | P8AUDIO_HWFX40     | w   | 8     | §14.2   |
 | `$80010F`  | P8AUDIO_HWFX41     | w   | 8     | §14.2   |
 | `$800111`  | P8AUDIO_HWFX42     | w   | 8     | §14.2   |
@@ -1423,8 +1415,7 @@ All register addresses and bit definitions are provided in `nextp8-bsp/include/n
 
 ## C. Key Differences from Standard m68k Systems
 
-1. **No I/O port space.** All peripherals are memory-mapped. There is no IOPL or port instruction mechanism.
-2. **No bus error / DTACK timeout.** Accesses to unmapped regions return `$FFFF` without generating a bus error.
-3. **CDC strobe pattern.** UART and ESP write/read strobes must be held for 3 cycles to ensure cross-clock-domain capture (mclk → clk_sys). This is a hardware requirement.
-4. **DMA stalls.** The P8 audio DMA has priority over the CPU. Audio DMA reads cause single-cycle CPU stalls that are transparent to software.
-5. **Double-buffered video.** The addresses `$c00000` and `$c02000` always refer to the logical back and front buffers respectively. A buffer flip changes which physical BRAM bank each address maps to.
+1. **No bus error / DTACK timeout.** Accesses to unmapped regions return `$FFFF` without generating a bus error.
+2. **CDC strobe pattern.** UART and ESP write/read strobes must be held for 4 cycles to ensure cross-clock-domain capture (mclk → clk_sys). This is a hardware requirement.
+3. **DMA stalls.** The P8 audio DMA has priority over the CPU. Audio DMA reads cause single-cycle CPU stalls that are transparent to software.
+4. **Double-buffered video.** The addresses `$c00000` and `$c02000` always refer to the logical back and front buffers respectively. A buffer flip changes which physical BRAM bank each address maps to.
