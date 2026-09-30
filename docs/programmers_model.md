@@ -28,40 +28,40 @@ The nextp8 FPGA image comprises a 68010 (m68k) compatible CPU with a set of memo
 ### 2.2 Address Map
 
 ```
-$1000000 +----------------------------------------------+
-         | (unmapped)                                    |
-$c10000  +----------------------------------------------+
-         | PCM Audio Sample Memory  [16 KB]              |
-         |   8192 × 16-bit samples                      |
-$c0c000  +----------------------------------------------+
-         | (reserved)                                    |
-$c08020  +----------------------------------------------+
-         | Display Palette — front buffer [16 × 8-bit]   |
-$c08010  +----------------------------------------------+
-         | Display Palette — back buffer  [16 × 8-bit]   |
-$c08000  +----------------------------------------------+
-         | Secondary Palette            [16 × 8-bit]    |
-$c08030  +----------------------------------------------+
-         | High colour bitfield         [16 bytes]      |
-$c08040  +----------------------------------------------+
-         | Overlay Front Buffer  [8 KB]                  |
-$c06000  +----------------------------------------------+
-         | Overlay Back Buffer   [8 KB]                  |
-$c04000  +----------------------------------------------+
-         | Screen Front Buffer   [8 KB]                  |
-$c02000  +----------------------------------------------+
-         | Screen Back Buffer    [8 KB]                  |
-$c00000  +----------------------------------------------+
-         | (reserved)                                    |
-$800200  +----------------------------------------------+
-         | P8 Audio Subsystem Registers ($800100–$8001FF)|
-$800100  +----------------------------------------------+
-         | System MMIO Registers  ($800000–$8000FF)      |
-$800000  +----------------------------------------------+
-         | (reserved for RAM expansion)                  |
-$200000  +----------------------------------------------+
-         | SRAM  [2 MB]                                  |
-$000000  +----------------------------------------------+
+$1000000 +------------------------------------------------+
+         | (unmapped)                                     |
+$c10000  +------------------------------------------------+
+         | PCM Audio Sample Memory  [16 KB]               |
+         |   8192 × 16-bit samples                        |
+$c0c000  +------------------------------------------------+
+         | (reserved)                                     |
+$c08040  +------------------------------------------------+
+         | High colour bitfield         [16 bytes]        |
+$c08030  +------------------------------------------------+
+         | Secondary Palette            [16 × 8-bit]      |
+$c08020  +------------------------------------------------+
+         | Display Palette — front buffer [16 × 8-bit]    |
+$c08010  +------------------------------------------------+
+         | Display Palette — back buffer  [16 × 8-bit]    |
+$c08000  +------------------------------------------------+
+         | Overlay Front Buffer  [8 KB]                   |
+$c06000  +------------------------------------------------+
+         | Overlay Back Buffer   [8 KB]                   |
+$c04000  +------------------------------------------------+
+         | Screen Front Buffer   [8 KB]                   |
+$c02000  +------------------------------------------------+
+         | Screen Back Buffer    [8 KB]                   |
+$c00000  +------------------------------------------------+
+         | (reserved)                                     |
+$800200  +------------------------------------------------+
+         | P8 Audio Subsystem Registers ($800100–$8001FF) |
+$800100  +------------------------------------------------+
+         | System MMIO Registers  ($800000–$8000FF)       |
+$800000  +------------------------------------------------+
+         | (reserved for RAM expansion)                   |
+$400000  +------------------------------------------------+
+         | SRAM  [4 MB]                                   |
+$000000  +------------------------------------------------+
 ```
 
 ---
@@ -528,7 +528,7 @@ int esp_send_at(const char *cmd, const char *expected, uint32_t timeout_us) {
 
 ### 10.1 Overview
 
-An SD card controller operating in SPI mode. Two chip select lines are available (directly mapping to SD card and secondary SPI).
+An SD card controller operating in SPI mode. Two chip select lines are available (directly mapping to the internal and external SD cards).
 
 ### 10.2 Registers
 
