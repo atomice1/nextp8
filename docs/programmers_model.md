@@ -162,6 +162,7 @@ The VBlank interrupt fires on the rising edge of the vertical sync signal at ~60
 | `$800013`  | VBLANK_INTR_CTRL | w      | 8     | Bit 0: `1` = enable and acknowledge; `0` = disable and acknowledge |
 
 **Programming notes:**
+
 - Writing any value to this register acknowledges (clears) a pending VBlank IRQ.
 - To enable: write `$01`. To disable: write `$00`.
 - The ISR must write to `VBLANK_INTR_CTRL` to clear the IRQ before returning (rte).
@@ -772,6 +773,7 @@ uint8_t latched = *(volatile uint8_t*)(0x800080 + byte_index);
 ```
 
 **USB HID scancodes:** The matrix uses USB HID scancodes (matching PICO-8/SDL 2), not PS/2 scancodes. For example:
+
 - `0x04` = 'A' key
 - `0x05` = 'B' key
 - `0x06` = 'C' key
@@ -824,11 +826,13 @@ The keyboard event queue stores up to 7 key press/release events in a FIFO buffe
 | `$8000AA`  | KEYBOARD_EVENT_QUEUE_LO  | r/w    | 16    | Lower 16 bits of 32-bit event (bits 15:0); write any value to clear queue |
 
 **Reading an event:**
+
 1. Read `KEYBOARD_EVENT_QUEUE_HI` to get bits 31:16.
 2. Read `KEYBOARD_EVENT_QUEUE_LO` to get bits 15:0 **and** pop the event from the queue.
 3. If the queue is empty, the read returns `0`.
 
 **Clearing the queue:**
+
 Write any value to `KEYBOARD_EVENT_QUEUE_LO`. This resets both read and write positions to 0.
 
 **Example (C):**
@@ -880,6 +884,7 @@ no_event:
 **Queue depth:** 7 events (uses 8-element circular buffer, with one slot reserved to distinguish full from empty).
 
 **USB HID scancodes:** The queue uses USB HID scancodes (matching PICO-8/SDL 2), not PS/2 scancodes. For example:
+
 - `0x04` = 'A' key
 - `0x1C` = 'Enter' key
 - `0xE0` = Left Control
@@ -1166,6 +1171,7 @@ When the bootloader transfers control to the main application:
 | **RAM**                  | Application loaded at `0x20000`, zero-padded BSS section |
 
 **Memory map at entry:**
+
 - `0x000000` - `0x1FFFFF` - SRAM (free for application use)
 - `0x20000` - Application code/data (loaded from file)
 - `memtop - 512` - Initial stack pointer
@@ -1260,6 +1266,7 @@ nextp8 --loader-image 0:/custom/path/app.bin arg1 arg2 arg3
 ```
 
 **Command line format in config block:**
+
 - Each argument is null-terminated
 - Arguments are contiguous in memory
 - End marked by empty string (double null terminator)
