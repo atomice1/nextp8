@@ -82,6 +82,9 @@ $1000000 +------------------------------------------+
  $8000a0 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
+ $8000ad | PS/2 led status [w] [8]                  |
+         |   [2] caps lock [1] num lock             |
+         |   [0] scroll lock                        |
  $8000aa | key event queue lo [rw] [16]             |
          |   [r] [15:0] scancode                    |
          |   [w] clear key event queue              |

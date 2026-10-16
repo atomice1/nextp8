@@ -742,7 +742,34 @@ if (pressed & 0x10) { /* Button 1 was just pressed */ }
 MMIO_REG8(0x80004D) = pressed;  // Clear latched bits
 ```
 
-### 12.2 Keyboard
+### 12.2 PS/2 Keyboard LED Status
+
+The PS/2 keyboard controller supports setting LED indicators (Scroll Lock, Num Lock, Caps Lock) via the Set LEDs command (0xED). The nextp8 core provides a write-only register to control these LEDs.
+
+| Address    | Name              | Access | Width | Description                              |
+|------------|-------------------|--------|-------|------------------------------------------|
+| `$8000AD`  | PS2_LED_STATUS    | w      | 8     | LED status: [2]=Caps, [1]=Num, [0]=Scroll |
+
+Write a byte to this register to set the LED states. Only bits [2:0] are used; write-only register (reads return undefined).
+
+**LED bit mapping:**
+- Bit 0: Scroll Lock LED
+- Bit 1: Num Lock LED
+- Bit 2: Caps Lock LED
+
+**Example (C):**
+```c
+// Set Caps Lock LED on, others off
+MMIO_REG8(0x8000AD) = 0x04;
+
+// Set all LEDs on
+MMIO_REG8(0x8000AD) = 0x07;
+
+// Turn off all LEDs
+MMIO_REG8(0x8000AD) = 0x00;
+```
+
+### 12.3 Keyboard
 
 Keyboard input is stored as a 256-bit matrix (32 bytes), indexed by **USB HID scancode** (8-bit). PS/2 keyboard events are translated to USB HID scancodes before being stored in the matrix. The `keyboard.sv` module handles the translation from PS/2 scancodes to USB HID scancodes, including special keys (arrows, F1-F12, numpad, modifier keys).
 

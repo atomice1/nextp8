@@ -22,3 +22,4 @@ The Pico-8 is a fantasy 8-bit games console. The fantasy bit means that Pico-8 i
 * [PICO-8 Compatibility](compatibility.md)
 * [Platform Information](platform.md)
 * [Build Instructions](building.md)
+* [User Guide](ug/README.md) - How to install and use nextp8
