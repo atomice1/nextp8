@@ -1,0 +1,34 @@
+nextp8
+======
+
+nextp8 is a fantasy console "core" for the ZX Spectrum Next Issue5 / KS3, implementing a PICO-8 compatible environment.
+
+User Guide
+----------
+
+The user guide can be found in docs/guides/nextp8.gde.
+
+Use this command to view the user guide:
+
+.guide nextp8
+
+Installing nextp8
+-----------------
+
+Flash (install) the core
+
+1. Power on your ZX Spectrum Next
+2. Wait until "Press C for extra cores" is displayed.
+3. Press C
+4. Select an empty core slot using the up and down cursor keys
+5. Press SPACE
+6. Select the nextp8 core using the up and down cursor keys
+7. Press ENTER to flash (install) the core
+
+Start the Core
+
+1. Power on your ZX Spectrum Next
+2. Wait until "Press C for extra cores" is displayed.
+3. Press C
+4. Select the nextp8 core using the up and down cursor keys
+5. Press ENTER to start the core
