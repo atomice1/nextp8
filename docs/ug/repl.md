@@ -1,15 +1,14 @@
 # REPL Screen
 
-The REPL (Read-Eval-Print Loop) is an interactive Lua interpreter that lets you test code and execute commands without creating a cart file. Access it by pressing **F7** (PS/2 keyboard only) from the Editor or **Break** (or **Esc**) from the Browse screen.
+The REPL (Read-Eval-Print Loop) is an interactive Lua interpreter that lets you test code and execute commands without creating a cart file. Access it from any screen using function keys.
 
 ## Accessing the REPL
 
-- Press **Extend+7** / **F7** from the Editor to open the REPL
-- Press **Break** / **Esc** from the Browse screen cycles to REPL (then back to Editor on next Break)
+- Press **Extend+7** / **F7** from any screen (Browse, Editor) to open the REPL
 
 ## Quitting the REPL
 
-- Press **Break** / **Esc** to return to the Editor
+- Press **Extend+6** / **F6** to return to Browse
 
 ## REPL Interface
 
@@ -17,6 +16,17 @@ The REPL screen is divided into two sections:
 
 - The **Output area** occupies most of the screen.
 - The **Input line** at the bottom: `> _` (underscore is the cursor)
+
+## Global Function Keys
+
+The following function keys work from the REPL:
+
+| Key | Action |
+|-----|--------|
+| **F1-F5** | Switch to editor and select tab (CODE, SPRITE, MAP, SFX, MUSIC) |
+| **F6** | Return to Browse screen |
+| **F7** | Stay in REPL (no-op) |
+| **F10** | Quit nextp8 |
 
 ## Lua Interpreter
 

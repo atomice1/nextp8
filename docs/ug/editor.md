@@ -4,8 +4,9 @@ The Editor is nextp8's integrated development environment for creating and modif
 
 ## Accessing the Editor
 
-- Press **Break** / **Esc** from the Browse screen to enter the Editor
+- Press **Break** / **Esc** from the Browse screen or REPL to enter the Editor
 - Press **Extend+6** / **F6** to quit the Editor and return to Browse
+- Press **Extndn+7** / **F7** to open the REPL
 
 ## Editor Tabs
 
@@ -13,11 +14,11 @@ The Editor has five tabs across the top of the screen. Each tab handles a differ
 
 | Tab | Shortcut | Description |
 |-----|-------------------------------|-------------|
-| **CODE** | **Extend+1 / F1** | Lua source code editor |
-| **SPRITE** | **Extend+2 / F2** | Sprite editor for 8x8 pixel graphics |
-| **MAP** | **Extend+3 / F3** | Tile map editor |
-| **SFX** | **Extend+4 / F4** | Sound effects editor |
-| **MUSIC** | **Extend+5 / F5** | Music pattern editor |
+| **CODE** | **Extend+1** / **F1** | Lua source code editor |
+| **SPRITE** | **Extend+2** / **F2** | Sprite editor for 8x8 pixel graphics |
+| **MAP** | **Extend+3** / **F3** | Tile map editor |
+| **SFX** | **Extend+4** / **F4** | Sound effects editor |
+| **MUSIC** | **Extend+5** / **F5** | Music pattern editor |
 
 ### Switching Tabs
 
@@ -290,12 +291,6 @@ The editor tracks cart modification status:
 - Each tab has independent undo/redo stacks
 - Up to 8 levels of undo per tab
 - **Extend+Z** / **Ctrl+Z** to undo, **Extend+Y** / **Ctrl+Y** to redo
-
-### Quick Switching
-
-- Use **Extend+R** / **Ctrl+R** to quickly test cart changes
-- Use **Extend+7** / **F7** to open REPL for debugging without leaving Editor
-- Use **Extend+A** / **Ctrl+A** to quickly save with new name
 
 ### Sprite Editing
 

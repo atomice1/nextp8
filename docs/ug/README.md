@@ -50,28 +50,29 @@ With the nextp8 core [installed](install.md):
    ```lua
    FUNCTION _INIT()
    END
-   
+
    FUNCTION UPDATE()
    END
-   
+
    FUNCTION _DRAW()
        CLS()
        PRINT("HELLO, WORLD!")
    END
    ```
-3. Press **Extend+R** / **Ctrl+R** to run your cart
-4. Press **Extend+S** / **Ctrl+S** to save it
+
+1. Press **Extend+R** / **Ctrl+R** to run your cart
+2. Press **Extend+S** / **Ctrl+S** to save it
 
 ### Using the REPL
 
-1. Press **Break** / **Esc** from the Editor to open the **REPL Screen**
+1. Press **Extend+7** / **F7** from any screen to open the **REPL Screen**
 2. Try some commands:
    ```lua
    > CLD()
    > PRINT("TESTING REPL")
    > FOR I=1,5 DO PRINT(I) END
    ```
-3. Press **Break** / **Esc** to return to the Editor
+3. Press **Extend+6** / **F6** to return to Browse
 
 ### Loading a Cart from BBS
 
@@ -100,10 +101,14 @@ nextp8 supports a PS/2 mouse. A mouse is recommended when using the editors.
 
 | Key | Action |
 |-----|--------|
+| **Extend+1** / **F1** | Switch to CODE tab in editor |
+| **Extend+2** / **F2** | Switch to SPRITE tab in editor |
+| **Extend+3** / **F3** | Switch to MAP tab in editor |
+| **Extend+4** / **F4** | Switch to SFX tab in editor |
+| **Extend+5** / **F5** | Switch to MUSIC tab in editor |
+| **Extend+6** / **F6** | Return to Browse screen |
+| **Extend+7** / **F7** | Open REPL |
 | **Break** / **Esc** | Switch between Browse/Editor/REPL screens |
-| **Extend+1** / **F1-F5** (PS/2 keyboard only) | Switch editor tabs (Code, Sprite, Map, SFX, Music) |
-| **Extend+6** / **F6** (PS/2 keyboard only) | Quit Editor, return to Browse |
-| **Extend+7** / **F7** (PS/2 keyboard only) | Open REPL |
 
 ### Editor
 

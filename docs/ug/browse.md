@@ -5,7 +5,7 @@ The Browse screen is nextp8's file manager and launcher. It lets you navigate di
 ## Accessing the Browse Screen
 
 - When nextp8 starts, it automatically displays the Browse screen
-- Press **Break** / **Esc** from the Editor or REPL to return to Browse
+- Press **Extend+6** / **F6** or **Break** / **Esc** from the Editor or REPL to return to Browse
 
 ## Main Interface
 
