@@ -82,6 +82,7 @@ $1000000 +------------------------------------------+
  $8000a0 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
+ $8000b1 | volume control [w] [8]                   |
  $8000ad | PS/2 led status [w] [8]                  |
          |   [2] caps lock [1] num lock             |
          |   [0] scroll lock                        |
@@ -136,7 +137,7 @@ $1000000 +------------------------------------------+
  $80003f | I2C status / control [8]                 |
          |   [r] [0] busy [1] error                 |
          |   [w] [0] enable [1] rw                  |
- $80003d | I2C read / write data [8]                |
+ $80003d | I2C read / write data [rw] [8]           |
  $80003a | ESP UART baud rate divider [r] [16]      |
  $800039 | ESP UART read / write data [rw] [8]      |
  $800037 | ESP UART status / control [8]            |
@@ -176,7 +177,7 @@ $1000000 +------------------------------------------+
  $800006 | build timestamp lo [16]                  |
  $800004 | build timestamp hi [16]                  |
  $800003 | POST code [w] [6]                        |
- $800001 | parameters [16]                          |
+ $800001 | parameters [w] [16]                      |
          |   [0] 0=keyboard at PS/2 port; 1=mouse   |
          |                                          |
  $800000 +------------------------------------------+

@@ -17,17 +17,6 @@ The REPL screen is divided into two sections:
 - The **Output area** occupies most of the screen.
 - The **Input line** at the bottom: `> _` (underscore is the cursor)
 
-## Global Function Keys
-
-The following function keys work from the REPL:
-
-| Key | Action |
-|-----|--------|
-| **F1-F5** | Switch to editor and select tab (CODE, SPRITE, MAP, SFX, MUSIC) |
-| **F6** | Return to Browse screen |
-| **F7** | Stay in REPL (no-op) |
-| **F10** | Quit nextp8 |
-
 ## Lua Interpreter
 
 The REPL provides a Lua interpreter supporting PICO-8's Lua dialect. You can:

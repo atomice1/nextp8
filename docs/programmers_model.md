@@ -1150,6 +1150,40 @@ MMIO_REG16(0x800102) = 0x0001;           // Run
 MMIO_REG16(0x800118) = 0xF005;           // Auto-channel, SFX 5
 ```
 
+### 14.7 Volume Control
+
+The volume control register allows software to adjust the overall audio volume. Only the top 4 bits of the written value are stored; the bottom 4 bits are discarded.
+
+Note: the volume control applies to both the sequencer and PCM digital audio.
+
+| Address    | Name            | Access | Width | Description                                               |
+|------------|-----------------|--------|-------|-----------------------------------------------------------|
+| `$8000B1`  | VOLUME_CONTROL  | w      | 8     | Top 4 bits stored (volume level), bottom 4 discarded. Reset value: `0x80`. |
+
+**Volume levels:**
+
+| Stored value | Volume level | Description              |
+|--------------|--------------|--------------------------|
+| `0xF0`       | 15           | Maximum volume (100%)    |
+| `0x80`       | 8            | Default volume (53%)     |
+| `0x00`       | 0            | Mute (0%)                |
+
+**Set volume to maximum (C):**
+```c
+MMIO_REG8(0x8000B1) = 0xF0;  // Store top 4 bits: 0xF
+```
+
+**Set volume to default (C):**
+```c
+MMIO_REG8(0x8000B1) = 0x80;  // Store top 4 bits: 0x8
+```
+
+**Set volume to mute (C):**
+```c
+MMIO_REG8(0x8000B1) = 0x00;  // Store top 4 bits: 0x0
+```
+
+
 ---
 
 ## 15. Debug Registers
@@ -1423,6 +1457,7 @@ For RTOS bring-up, the minimum initialization sequence is:
 | `$800059`  | MOUSE_BTNS_LATCHED | rw  | 8     | §12.3   |
 | `$800060`  | KEYBOARD_MATRIX    | r   | 256b  | §12.2   |
 | `$800080`  | KBD_MATRIX_LATCHED | rw  | 256b  | §12.2   |
+| `$8000B1`  | VOLUME_CONTROL     | w   | 8     | §14.7   |
 | `$800100`  | P8AUDIO_VERSION    | r   | 16    | §14.2   |
 | `$800102`  | P8AUDIO_CTRL       | w   | 16    | §14.2   |
 | `$800104`  | P8AUDIO_SFX_BASE_HI| w   | 16    | §14.2   |
