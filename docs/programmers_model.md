@@ -1457,6 +1457,11 @@ For RTOS bring-up, the minimum initialization sequence is:
 | `$800059`  | MOUSE_BTNS_LATCHED | rw  | 8     | §12.3   |
 | `$800060`  | KEYBOARD_MATRIX    | r   | 256b  | §12.2   |
 | `$800080`  | KBD_MATRIX_LATCHED | rw  | 256b  | §12.2   |
+| `$8000A1`  | SCREEN_TRANSFORM   | w   | 8     | §7.6    |
+| `$8000A3`  | HIGH_COLOUR_MODE   | w   | 8     | §7.7    |
+| `$8000A8`  | KBD_EVENT_QUEUE_HI | r   | 16    | §12.2   |
+| `$8000AA`  | KBD_EVENT_QUEUE_LO | rw  | 16    | §12.2   |
+| `$8000AD`  | PS2_LED_STATUS     | w   | 8     | §12.2   |
 | `$8000B1`  | VOLUME_CONTROL     | w   | 8     | §14.7   |
 | `$800100`  | P8AUDIO_VERSION    | r   | 16    | §14.2   |
 | `$800102`  | P8AUDIO_CTRL       | w   | 16    | §14.2   |
