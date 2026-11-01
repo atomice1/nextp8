@@ -7,28 +7,6 @@ nextp8 is a PICO-8 compatible "core" for the ZX Spectrum Next. This user guide c
 - [Installation](install.md) - How to install nextp8 on your ZX Spectrum Next
 - [Quick Start](#quick-start) - What to do after that
 
-## Using nextp8
-
-### Screens
-
-nextp8 has three main screens that you'll use:
-
-1. **Browse Screen** - File manager and cart launcher
-   - [Browse Screen Guide](browse.md)
-   
-2. **Editor Screen** - Integrated development environment
-   - [Editor Guide](editor.md)
-   - Includes: Code, Sprite, Map, SFX, and Music editors
-   
-3. **REPL Screen** - Interactive Lua interpreter
-   - [REPL Guide](repl.md)
-
-### PICO-8 Compatibility
-
-nextp8 aims for PICO-8 compatibility while running on real hardware:
-
-- [PICO-8 Compatibility](../compatibility.md) - What's supported and what's not
-
 ## Quick Start
 
 ### First Boot
@@ -43,7 +21,13 @@ With the nextp8 core [installed](install.md):
 6. nextp8 starts in the **Browse Screen**
 7. Select a cart file and press **Enter** / **Return** to run it
 
-### Creating a New Game
+## Running Carts
+
+When you launch a cart from the Browse screen, nextp8 loads and runs it.
+
+- [Running Carts](cart.md) - Guide to controls and pause menu
+
+### Creating a New Cart
 
 1. Press **Break** / **Esc** to enter the **Editor Screen**
 2. Type your Lua code:
@@ -80,6 +64,38 @@ With the nextp8 core [installed](install.md):
 2. Select **BBS DOWNLOAD**
 3. Enter the cart ID in `#ID` format
 4. The cart downloads and launches automatically
+
+## Using nextp8
+
+### Screens
+
+As well as running carts nextp8 has three main screens that you'll use:
+
+1. **Browse Screen** - File manager and cart launcher
+   - [Browse Screen Guide](browse.md)
+
+2. **Editor Screen** - Integrated development environment
+   - [Editor Guide](editor.md)
+   - Includes: Code, Sprite, Map, SFX, and Music editors
+
+3. **REPL Screen** - Interactive Lua interpreter
+   - [REPL Guide](repl.md)
+
+### Running Carts
+
+Once you've selected a cart in the Browse screen or type RUN in the REP screenL:
+
+- [Running Carts](cart.md) - Guide to controls and pause menu
+
+### Configuration
+
+- [Options Menu](options.md) - Configure volume and autosave settings
+
+### PICO-8 Compatibility
+
+nextp8 aims for PICO-8 compatibility while running on real hardware:
+
+- [PICO-8 Compatibility](../compatibility.md) - What's supported and what's not
 
 ## Keyboard Support
 

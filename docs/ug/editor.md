@@ -15,7 +15,7 @@ The Editor has five tabs across the top of the screen. Each tab handles a differ
 | Tab | Shortcut | Description |
 |-----|-------------------------------|-------------|
 | **CODE** | **Extend+1** / **F1** | Lua source code editor |
-| **SPRITE** | **Extend+2** / **F2** | Sprite editor for 8x8 pixel graphics |
+| **SPRITE** | **Extend+2** / **F2** | Sprite editor |
 | **MAP** | **Extend+3** / **F3** | Tile map editor |
 | **SFX** | **Extend+4** / **F4** | Sound effects editor |
 | **MUSIC** | **Extend+5** / **F5** | Music pattern editor |
@@ -53,7 +53,7 @@ The Code Editor displays and edits the Lua source code for your cart.
 | Key | Action |
 |-----|--------|
 | **Arrow keys** | Move cursor one character/line |
-| **Extend+Left/Right** / **Ctrl+Left/Right** | Move one word left/right |
+| **Extend+Left/Right** / **Ctrl+Left/Right** | Move one word |
 | **Extend+SymShift+2** / **Home** | Move to start of line |
 | **Extend+M** / **End** | Move to end of line |
 | **True Video** / **PgUp** | Scroll up one page |
@@ -179,7 +179,7 @@ The Map Editor shows a 16x12 tile window into the 128x32 tile map. Each tile is 
 | Key | Action |
 |-----|--------|
 | **Arrow keys** | Move cursor one tile |
-| **True Video** / **PgUp** | Scroll viewport up one page (12 rows) |
+| **True Video** / **PgUp** | Scroll viewport up one page |
 | **Inv Video ** / **PgDn** | Scroll viewport down one page |
 | **Space+drag** | Pan viewport |
 
@@ -209,7 +209,7 @@ The Sound Effects Editor manages 64 SFX, each containing up to 32 notes.
 |-----|--------|
 | **Up/Down** | Move between SFX (list) or notes (edit) |
 | **Left/Right** | Move between columns in edit view |
-| **True Video/Inv Video** / **PgUp/PgDn** | Fast navigation in list view |
+| **True Video/Inv Video** / **PgUp/PgDn** | Page up / down |
 | **Home/End** | Jump to first/last note (edit view) |
 | **Enter** / **Return** | Open selected SFX in edit view |
 | **Break** / **Esc** | Return from edit to list view |

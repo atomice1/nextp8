@@ -72,12 +72,15 @@ Press **Button 2 (X)** to open the context menu. The menu options include:
 
 | Menu Item | Description |
 |-----------|-------------|
-| **EDIT CART** | Opens the selected cart in the Editor for modification |
-| **BBS DOWNLOAD** | Downloads a cart from the BBS (if Wi-Fi is configured) |
+| **EDIT CART** | Opens the selected cart in the Editor |
+| **BBS DOWNLOAD** | Downloads a cart from the BBS |
 | **WI-FI CONFIG** | Configures Wi-Fi connection |
 | **SHOW VERSION** | Displays the nextp8 firmware version |
 | **CONTROLS** | Shows current control bindings |
+| **OPTIONS** | Configure volume and autosave settings |
 | **BACK** | Returns to the file list |
+
+For more information on options, see the [Options Menu](options.md) guide.
 
 ## Tips and Tricks
 
