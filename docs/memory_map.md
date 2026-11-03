@@ -82,6 +82,8 @@ $1000000 +------------------------------------------+
  $8000a0 +------------------------------------------+
          | memory mapped ports                      |
          |                                          |
+ $8000b3 | ROM overlay control [w] [8]              |
+         |   [0] disable ROM overlay                |
  $8000b1 | volume control [w] [8]                   |
  $8000ad | PS/2 led status [w] [8]                  |
          |   [2] caps lock [1] num lock             |
