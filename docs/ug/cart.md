@@ -38,6 +38,7 @@ When a cart is running, press **P** or **Enter** to pause. The pause menu shows:
 | **SHOW VERSION** | Display nextp8 firmware version |
 | **CONTROLS** | Show keyboard controls reference card |
 | **OPTIONS** | Configure volume and autosave settings |
+| **SNAP AS LABEL** | Snapshot the current screen as the cart's label |
 | **QUIT** | Return to the Browse screen |
 
 ## Compatibility
