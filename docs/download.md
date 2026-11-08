@@ -6,6 +6,8 @@ nextp8 is still work in progress and is targeted at the unreleased KS3 Next hard
 Licences
 --------
 
+Cover image credit: GrafxKid
+
 ### nextp8-core
 
 Copyright (C) 2025-2026 Chris January and other authors.<br>
