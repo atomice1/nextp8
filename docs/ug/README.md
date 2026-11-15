@@ -72,14 +72,14 @@ When you launch a cart from the Browse screen, nextp8 loads and runs it.
 As well as running carts nextp8 has three main screens that you'll use:
 
 1. **Browse Screen** - File manager and cart launcher
-   - [Browse Screen Guide](browse.md)
+    - [Browse Screen Guide](browse.md)
 
 2. **Editor Screen** - Integrated development environment
-   - [Editor Guide](editor.md)
-   - Includes: Code, Sprite, Map, SFX, and Music editors
+    - [Editor Guide](editor.md)
+    - Includes: Code, Sprite, Map, SFX, and Music editors
 
 3. **REPL Screen** - Interactive Lua interpreter
-   - [REPL Guide](repl.md)
+    - [REPL Guide](repl.md)
 
 ### Running Carts
 

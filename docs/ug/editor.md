@@ -250,9 +250,9 @@ The Music Editor manages 64 patterns, each using 4 SFX channels.
 
 - **Flag column (col 0)**: Press **L/E/S** to toggle flags
 - **SFX columns (cols 1-4)**: Type digits for SFX index (0-127)
-  - Two digits commit immediately
-  - Single digit commits on navigation away
-  - **Break** / **Esc** cancels pending input without leaving tab
+    - Two digits commit immediately
+    - Single digit commits on navigation away
+    - **Break** / **Esc** cancels pending input without leaving tab
 
 **Status:**
 - Flag column: `ud:pattern lr:col l/e/s:flags`
