@@ -15,9 +15,9 @@ With the nextp8 core [installed](install.md):
 
 1. Power on your ZX Spectrum Next
 2. Wait until "Press C for extra cores" is displayed.
-3. Press C
-4. Select the nextp8 core using the up and down cursor keys
-5. Press ENTER to start the core
+3. Press **C**
+4. Select the nextp8 core using the left and right cursor keys
+5. Press **ENTER** to start the core
 6. nextp8 starts in the **Browse Screen**
 7. Select a cart file and press **Enter** / **Return** to run it
 

@@ -3,6 +3,8 @@ Download
 
 nextp8 will be available for download soon!
 
+After downloading, read the [Install Guide](ug/install.md).
+
 Licences
 --------
 

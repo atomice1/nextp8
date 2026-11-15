@@ -15,20 +15,28 @@ Use this command to view the user guide:
 Installing nextp8
 -----------------
 
-Flash (install) the core
+The nextp8 installation program copies the core files from an external SD card to the internal SD card.
+
+To install nextp8 onto the internal SD card:
+
+1. On a PC/Mac, unzip the release .zip file onto an SD card (must be FAT32 formatted)
+2. Make sure install-nextp8.bas is in the root of the SD card
+3. Insert the SD card into the ZX Spectrum Next
+4. Power on the Next and wait for the main menu
+5. Press ENTER to open the Browser.
+6. Press D to change to the external SD card drive
+7. Select install-nextp8.bas and press ENTER
+8. The installer will detect the source drive and prompt for confirmation
+9. Press Y to confirm and install
+10. Wait for the installation to complete
+11. Press Y to confirm and reset
+
+The core will now be available in the core browser but it still needs installing to an available slot.
+
+To install the core:
 
 1. Power on your ZX Spectrum Next
-2. Wait until "Press C for extra cores" is displayed.
-3. Press C
-4. Select an empty core slot using the up and down cursor keys
-5. Press SPACE
-6. Select the nextp8 core using the up and down cursor keys
-7. Press ENTER to flash (install) the core
-
-Start the Core
-
-1. Power on your ZX Spectrum Next
-2. Wait until "Press C for extra cores" is displayed.
+2. Wait until Press C for extra cores is displayed.
 3. Press C
 4. Select the nextp8 core using the up and down cursor keys
 5. Press ENTER to start the core
