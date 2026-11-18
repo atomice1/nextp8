@@ -161,10 +161,10 @@ $1000000 +------------------------------------------+
  $80001f | overlay control [w] [8]                  |
          |   [3:0] transparent index [6] enable     |
  $80001d | vfront [r] / vfrontreq [w] [1]           |
- $80001a | 1MHz tick count [63:48] [16]             |
- $800018 | 1Mhz tick count [47:32] [16]             |
- $800016 | 1MHz tick count [31:16] [16]             |
- $800014 | 1Mhz tick count [15:0] [16]              |
+ $80001a | 1MHz tick count [15:0] [16]              |
+ $800018 | 1Mhz tick count [31:16] [16]             |
+ $800016 | 1MHz tick count [47:32] [16]             |
+ $800014 | 1Mhz tick count [63:48] [16]             |
  $800013 | vblank interrupt control [w] [8]         |
          |   [0] 0=disable and clear IRQ            |
          |       1=enable and clear IRQ             |
