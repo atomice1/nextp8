@@ -3,7 +3,126 @@ Download
 
 nextp8 will be available for download soon!
 
-After downloading, read the [Install Guide](ug/install.md).
+Installation
+------------
+
+### Step 1: Download the Installer
+
+Download the file above and unzip it.
+
+You can do this on a PC/Mac or on the Next itself.
+
+To unzip files on the Next use the `.unzip` dot command, e.g.
+
+```
+.unzip "nextp8-release.zip"
+```
+
+### Step 2: Navigate to the Installer in the Browser
+
+![ZX OS Main Menu](install/zxos-main-menu.png)
+
+Start the Browser to begin the installation process.
+
+![Browser Drive Selection](install/browser-drive.png)
+
+Navigate to the drive and path containing the installer files.
+
+### Step 3: Start the Installer
+
+Select `installer-nextp8.bas` in the Browser and press **ENTER**.
+
+![Installer Confirmation](install/installer-confirm.png)
+
+### Step 4: Confirm the Installation
+
+Press **Y** to confirm the installation settings.
+
+### Step 5: Installer Completed
+
+Wait for the install to complete.
+
+![Installer Completed](install/installer-completed.png)
+
+The installer completes successfully.
+
+Press any key to reset the Next.
+
+### Step 6: Core Selection
+
+![ZX Next Splash Screen](install/zxn-splash.png)
+
+At the boot splash screen press **C** for *extra cores*.
+
+Press **Right** until you see the nextp8 core.
+
+![Core Selection](install/select-core.png)
+
+### Step 7: Flash Core
+
+Press **ENTER** to start flashing the core.
+
+![Flash Core](install/flash-core.png)
+
+### Step 8: Flash Core - Choose Slot
+
+![Flash Core - Choose Slot](install/flash-core-choose-slot.png)
+
+Select the target core slot for flashing and press **ENTER**
+
+### Step 9: Flash Core - Confirm
+
+![Flash Core - Confirm](install/flash-core-confirm.png)
+
+Press **Y** to confirm the core flashing operation.
+
+### Step 10: Flash Core - Progress
+
+![Flash Core - Progress](install/flash-core-progress.png)
+
+Watch the flashing progress indicator.
+
+### Step 11: Flash Core - Done
+
+![Flash Core - Done](install/flash-core-done.png)
+
+Core flashing complete.
+
+### Step 12: Core Loading
+
+Press **ENTER** to start the core.
+
+![Core Loading](install/core-loading.png)
+
+The core starts loading.
+
+### Step 13: nextp8 Boot
+
+![nextp8 Boot](install/nextp8-boot.png)
+
+nextp8 starts booting.
+
+### Step 14: nextp8 Browser
+
+![nextp8 Browser](install/nextp8-browser.png)
+
+The nextp8 browser interface is ready.
+
+### Step 15: nextp8 Browser Welcome
+
+![nextp8 Browser Welcome](install/nextp8-browser-welcome.png)
+
+Select `welcome.png` in the nextp8 browser using **DOWN** and then **ENTER**.
+
+### Step 16: nextp8 Welcome
+
+![nextp8 Welcome](install/nextp8-welcome.png)
+
+Welcome to nextp8!
+
+### More Information
+
+For more information read the [Install Guide](ug/install.md) and check the *Booting, Adding, Removing or Replacing an Extra Core* section of the Quick Start guide that came with your Next.
 
 Licences
 --------
