@@ -1,132 +1,127 @@
-10 REM nextp8 Install Program
-20 REM This program installs nextp8 from the external SD card to the internal SD card
+10 REM nextp8 installer
 30 POKE 23692, 255
 40 RESTORE
 50 PROC main()
 60 PROC reset()
 
 70 DEFPROC reset()
-75 PRINT "Press any key to reset"
-80 ON ERROR REG 2,2
-85 NEXT #0 TO k
-90 REG 2,2
-95 STOP
-99 ENDPROC
+80 PRINT "Press any key to reset"
+90 ON ERROR REG 2,2
+100 NEXT #0 TO k
+110 REG 2,2
+120 STOP
+130 ENDPROC
 
-100 DEFPROC checkfile(filename$)
-120 ON ERROR CLOSE #4: ENDPROC =0
-130 CLOSE #4
-140 OPEN #4, filename$
+140 DEFPROC checkfile(filename$)
+150 ON ERROR CLOSE #4: ENDPROC =0
 160 CLOSE #4
-180 ENDPROC =1
+170 OPEN #4, filename$
+180 CLOSE #4
+190 ENDPROC =1
 
 200 DEFPROC createpath(path$)
 210 ON ERROR ENDPROC
 220 MKDIR path$
-240 ENDPROC
+230 ENDPROC
 
-250 DEFPROC createdirs()
-260 ON ERROR ENDPROC
-270 READ %n
-280 FOR i=1 TO %n
-290     READ dir$
-300     PROC createpath(target$+dir$)
-310 NEXT i
-330 ENDPROC
+240 DEFPROC createdirs()
+250 ON ERROR ENDPROC
+260 READ %n
+270 FOR i=1 TO %n
+280 READ dir$
+290 PROC createpath(target$+dir$)
+300 NEXT i
+310 ENDPROC
 
-350 DEFPROC main()
-360 CLS
-370 INVERSE 1:PRINT AT 0,0;"nextp8 Installation Program":INVERSE 0
-380 PRINT AT 2,0;
-400 REM Drive detection variables
-410 LET source$ = ""
-420 LET target$ = ""
-440 REM Check for installer file on C: drive
-445 PRINT "Starting install..."
-450 PRINT "Checking C:..."
-460 PROC checkfile("C:/install-nextp8.bas") TO result
-470 IF result = 1
-475     LET source$ = "C:/"
-480     LET target$ = "D:/"
-490     GOTO @sourcefound
-500 ENDIF
-520 REM Check for installer file on D: drive
-530 PROC checkfile("D:/install-nextp8.bas") TO result
-540 IF result = 1
-550     LET source$ = "D:/"
-560     LET target$ = "C:/"
-570     GOTO @sourcefound
-580 ENDIF
-600 REM No installer file found - display error
-620 PRINT "ERROR: No install files found"
-630 PRINT "Please copy install-nextp8.bat to either C: or D: drive"
-670 PROC reset()
-680 @sourcefound
-700 REM Target validation - check for TBBLUE.FW (NextZXOS firmware file)
-720 PRINT "Source drive: ";:INVERSE 1:PRINT source$:INVERSE 0
-730 PRINT "Target drive: ";:INVERSE 1:PRINT target$:INVERSE 0
-740 PRINT "Checking target system..."
-760 PROC checkfile(target$+"TBBLUE.FW") TO result
-770 IF result = 0
-790     PRINT "ERROR: No TBBLUE.FW found"
-800     PRINT "Target drive must have NextZXOS installed"
-840     PROC reset()
-850 ENDIF
-880 REM User confirmation
-920 PRINT "Install nextp8 distribution     files?"
-930 PRINT "Press Y to confirm, any other   key to abort..."
-940 NEXT #0 TO k
-950 IF k <> CODE "Y" AND k <> CODE "y" THEN PROC reset()
-990 REM Check if already installed
-1000 PROC checkfile(target$+"machines/nextp8/core.cfg") TO result
-1010 IF result = 1
-1030     PRINT "nextp8 is already installed on  ";target$
-1040     PRINT "Press Y to confirm overwrite,   any other key to abort..."
-1050     NEXT #0 TO k
-1060     IF k <> CODE "Y" AND k <> CODE "y" THEN PROC reset()
-1110 ENDIF
-1150 REM Create target directory structure
-1170 PRINT "Creating directory structure..."
-1180 PROC createdirs()
-1200 REM Copy files using COPY command
-1220 PRINT "Installing nextp8 files..."
-1230 INVERSE 1:PRINT "Copying files from ";source$;" to ";target$:INVERSE 0
-1260 DATA 8
-1270 DATA "machines"
-1280 DATA "machines/nextp8"
-1290 DATA "machines/nextp8/carts"
-1300 DATA "docs"
-1310 DATA "docs/guides"
-1320 DATA "docs/extracores"
-1330 DATA "docs/licenses"
-1340 DATA "docs/licenses/nextp8"
-1370 DATA 16
-1380 DATA "machines/nextp8/loader.bin"
-1390 DATA "machines/nextp8/nextp8.bin"
-1400 DATA "machines/nextp8/core.cfg"
-1410 DATA "machines/nextp8/core.nxi"
-1420 DATA "machines/nextp8/carts/welcome.p8"
-1430 DATA "machines/nextp8/carts/snake.p8"
-1440 DATA "machines/nextp8/carts/bricks.p8"
-1450 DATA "machines/nextp8/carts/runner.p8"
-1460 DATA "docs/guides/nextp8.gde"
-1470 DATA "docs/extracores/nextp8.txt"
-1480 DATA "docs/licenses/nextp8-license.md"
-1490 DATA "docs/licenses/nextp8/gpl-3.0.txt"
-1500 DATA "docs/licenses/nextp8/apache-2.0.txt"
-1510 DATA "docs/licenses/nextp8/nextp8-core_NOTICES.txt"
-1512 DATA "docs/licenses/nextp8/femto8-nextp8_NOTICES.txt"
-1514 DATA "docs/licenses/nextp8/nextp8-bsp_NOTICES.txt"
-1550 REM Read and copy each file using COPY command
-1555 READ %n
-1560 FOR i=1 TO %n
-1565    POKE 23692, 255
-1570    READ filepath$
-1580    IF filepath$ = "" THEN GOTO @copydone
-1610    PRINT filepath$
-1620    COPY source$+filepath$ TO target$+filepath$
-1630 NEXT i
-1640 @copydone
-1660 REM Installation complete
-1680 PRINT "Files installed successfully!"
-1720 ENDPROC
+320 DEFPROC main()
+330 CLS
+340 INVERSE 1:PRINT AT 0,0;"nextp8 Installation Program":INVERSE 0
+350 PRINT AT 2,0;
+370 LET target$ = ""
+380 REM Check for installer file
+390 PRINT "Starting install..."
+400 PRINT "Checking for NextZXOS target    drive"
+410 PROC checkfile("C:/TBBLUE.FW") TO result
+420 IF result = 1
+430 LET target$ = "C:"
+440 GOTO @targetfound
+450 ENDIF
+470 PROC checkfile("D:/TBBLUE.FW") TO result
+480 IF result = 1
+490 LET target$ = "D:"
+500 GOTO @targetfound
+510 ENDIF
+530 PRINT "ERROR: No TBBLUE.FW found"
+540 PRINT "Target drive must have NextZXOS installed"
+550 PROC reset()
+560 @targetfound
+565 REM Get current directory and strip trailing spaces
+570 DIM tmp$(255):OPEN #2,"v>tmp$":PWD #2:CLOSE #2
+590 LET source$=tmp$[>]
+595 REM Strip trailing slash from drive root
+600 LET realsource$=source$
+605 IF LEN source$ = 3 THEN LET realsource$ = realsource$(1 TO 2)
+610 PROC checkfile(realsource$ + "/machines/nextp8/core.cfg") TO result
+620 IF result = 0
+630 PRINT "ERROR: Source files not found"
+640 PRINT "Run installer-nextp8.bas from the installer directory"
+650 PROC reset()
+660 ENDIF
+670 PRINT "Source path:  ";:INVERSE 1:PRINT source$:INVERSE 0
+680 PRINT "Target drive: ";:INVERSE 1:PRINT target$:INVERSE 0
+700 PRINT "Install nextp8 distribution     files?"
+710 PRINT "Press Y to confirm, any other   key to abort..."
+720 NEXT #0 TO k
+730 IF k <> CODE "Y" AND k <> CODE "y" THEN PROC reset()
+740 REM Check if already installed
+750 PROC checkfile(target$+"/machines/nextp8/core.cfg") TO result
+760 IF result = 1
+770 PRINT "nextp8 is already installed on  ";target$
+780 PRINT "Press Y to confirm overwrite,   any other key to abort..."
+790 NEXT #0 TO k
+800 IF k <> CODE "Y" AND k <> CODE "y" THEN PROC reset()
+810 ENDIF
+830 PRINT "Creating directory structure..."
+840 PROC createdirs()
+860 PRINT "Installing nextp8 files..."
+870 INVERSE 1:PRINT "Copying files from ";source$;" to ";target$:INVERSE 0
+890 READ %n
+900 FOR i=1 TO %n
+910 POKE 23692, 255
+920 READ filepath$
+930 IF filepath$ = "" THEN GOTO @copydone
+940 PRINT filepath$
+950 COPY realsource$+"/"+filepath$ TO target$+"/"+filepath$
+960 NEXT i
+970 @copydone
+990 PRINT "Files installed successfully!"
+1000 ENDPROC
+
+1010 DATA 8
+1020 DATA "machines"
+1030 DATA "machines/nextp8"
+1040 DATA "machines/nextp8/carts"
+1050 DATA "docs"
+1060 DATA "docs/guides"
+1070 DATA "docs/extracores"
+1080 DATA "docs/licenses"
+1090 DATA "docs/licenses/nextp8"
+1100 DATA 16
+1110 DATA "machines/nextp8/loader.bin"
+1120 DATA "machines/nextp8/nextp8.bin"
+1130 DATA "machines/nextp8/core.bit"
+1140 DATA "machines/nextp8/core3.bit"
+1150 DATA "machines/nextp8/core.cfg"
+1160 DATA "machines/nextp8/core.nxi"
+1170 DATA "machines/nextp8/carts/welcome.p8"
+1180 DATA "machines/nextp8/carts/snake.p8"
+1190 DATA "machines/nextp8/carts/bricks.p8"
+1200 DATA "machines/nextp8/carts/runner.p8"
+1210 DATA "docs/guides/nextp8.gde"
+1220 DATA "docs/extracores/nextp8.txt"
+1230 DATA "docs/licenses/nextp8-license.md"
+1240 DATA "docs/licenses/nextp8/gpl-3.0.txt"
+1250 DATA "docs/licenses/nextp8/apache-2.0.txt"
+1260 DATA "docs/licenses/nextp8/nextp8-core_NOTICES.txt"
+1270 DATA "docs/licenses/nextp8/femto8-nextp8_NOTICES.txt"
+1280 DATA "docs/licenses/nextp8/nextp8-bsp_NOTICES.txt"
